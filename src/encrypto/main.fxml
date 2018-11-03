@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="700.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="encrypto.Controller">
+    <TabPane layoutY="30.0" prefHeight="670.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+        <Tab text="Symmetric">
+            <AnchorPane prefHeight="633.0" prefWidth="618.0">
+                <Label layoutX="141.0" layoutY="14.0" text="Symmetric Cryptography">
+                    <font>
+                        <Font size="30.0" />
+                    </font>
+                </Label>
+
+                <Label layoutX="22.0" layoutY="136.0" text="File source">
+                    <font>
+                        <Font size="14.0" />
+                    </font>
+                </Label>
+                <TextField id="smTfFI" layoutX="22.0" layoutY="159.0" prefHeight="27.0" prefWidth="500.0" />
+                <Button id="smBtnFI" layoutX="536.0" layoutY="159.0" mnemonicParsing="false" text="Browse" />
+
+                <Label layoutX="22.0" layoutY="201.0" text="File destination">
+                    <font>
+                        <Font size="14.0" />
+                    </font>
+                </Label>
+                <TextField id="smTfFO" layoutX="22.0" layoutY="225.0" prefHeight="27.0" prefWidth="500.0" />
+                <Button id="smBtnFO" layoutX="536.0" layoutY="225.0" mnemonicParsing="false" text="Browse" />
+
+                <Label layoutX="22.0" layoutY="323.0" text="Key">
+                    <font>
+                        <Font size="14.0" />
+                    </font>
+                </Label>
+                <TextField id="smTfK" layoutX="58.0" layoutY="318.0" prefHeight="27.0" prefWidth="461.0" />
+                <Button id="smBtnK" layoutX="536.0" layoutY="318.0" mnemonicParsing="false" text="Browse" />
+
+                <Label layoutX="29.0" layoutY="411.0" text="Type">
+                    <font>
+                        <Font size="14.0" />
+                    </font>
+                </Label>
+                <ComboBox id="smCbbAlgorithms" layoutX="101.0" layoutY="407.0" prefHeight="25.0" prefWidth="155.0" />
+                <Label layoutX="356.0" layoutY="411.0" text="Mode">
+                    <font>
+                        <Font size="14.0" />
+                    </font>
+                </Label>
+                <ComboBox id="smCbbMode" layoutX="421.0" layoutY="407.0" prefHeight="25.0" prefWidth="155.0" />
+                <Label layoutX="29.0" layoutY="468.0" text="Key size">
+                    <font>
+                        <Font size="14.0" />
+                    </font>
+                </Label>
+                <ComboBox id="smCbbKeySize" layoutX="101.0" layoutY="464.0" prefHeight="25.0" prefWidth="155.0" />
+                <Label layoutX="356.0" layoutY="468.0" text="Padding">
+                    <font>
+                        <Font size="14.0" />
+                    </font>
+                </Label>
+                <ComboBox id="smCbbPadding" layoutX="420.0" layoutY="464.0" prefHeight="25.0" prefWidth="155.0" />
+
+                <RadioButton id="smRdbtnEn" layoutX="179.0" layoutY="80.0" mnemonicParsing="false" text="Encryption">
+                    <font>
+                        <Font size="16.0" />
+                    </font>
+                </RadioButton>
+                <RadioButton id="smRdbtnDe" layoutX="326.0" layoutY="80.0" mnemonicParsing="false" text="Decryption">
+                    <font>
+                        <Font size="16.0" />
+                    </font>
+                </RadioButton>
+                <Button id="smBtnSt" layoutX="228.0" layoutY="564.0" mnemonicParsing="false" prefHeight="43.0" prefWidth="172.0" text="Start">
+                    <font>
+                        <Font size="16.0" />
+                    </font>
+                </Button>
+                <Separator layoutY="363.0" prefWidth="618.0" />
+                <Separator layoutY="124.0" prefWidth="618.0" />
+                <Separator layoutX="311.0" layoutY="363.0" orientation="VERTICAL" prefHeight="130.0" prefWidth="6.0" />
+                <Label layoutX="128.0" layoutY="372.0" text="Algorithm">
+                    <font>
+                        <Font size="16.0" />
+                    </font>
+                </Label>
+                <Label layoutX="458.0" layoutY="372.0" text="Option">
+                    <font>
+                        <Font size="16.0" />
+                    </font>
+                </Label>
+                <RadioButton id="smRdbtnCrK" layoutX="189.0" layoutY="283.0" mnemonicParsing="false" text="Create new key" />
+                <RadioButton id="smRdbtnUseK" layoutX="333.0" layoutY="283.0" mnemonicParsing="false" text="Use exist key" />
+                <Separator layoutY="269.0" prefWidth="618.0" />
+                <ProgressIndicator id="smProi" layoutX="420.0" layoutY="565.0" progress="0.0" visible="false" />
+            </AnchorPane>
+        </Tab>
+        <Tab text="Asymmetric">
+            <AnchorPane prefHeight="574.0" prefWidth="618.0">
+                <Label layoutX="136.0" layoutY="14.0" text="Asymmetric Cryptography">
+                    <font>
+                        <Font size="30.0" />
+                    </font>
+                </Label>
+                <Label layoutX="8.0" layoutY="147.0" text="File source">
+                    <font>
+                        <Font size="14.0" />
+                    </font>
+                </Label>
+                <TextField id="asmTfFI" layoutX="112.0" layoutY="144.0" prefHeight="25.0" prefWidth="390.0" />
+                <Button id="asmBtnFI" layoutX="521.0" layoutY="144.0" mnemonicParsing="false" text="Choose file" />
+
+                <Label layoutX="6.0" layoutY="200.0" text="File destination">
+                    <font>
+                        <Font size="14.0" />
+                    </font>
+                </Label>
+                <TextField id="asmTfFO" layoutX="112.0" layoutY="197.0" prefHeight="25.0" prefWidth="390.0" />
+                <Button id="asmBtnFO" layoutX="521.0" layoutY="197.0" mnemonicParsing="false" text="Save file" />
+
+                <Label layoutX="8.0" layoutY="251.0" text="Key">
+                    <font>
+                        <Font size="14.0" />
+                    </font>
+                </Label>
+                <TextField id="asmTfK" layoutX="112.0" layoutY="248.0" prefHeight="25.0" prefWidth="390.0" />
+                <Button id="asmBtnK" layoutX="521.0" layoutY="248.0" mnemonicParsing="false" text="Save file" />
+
+                <Label layoutX="28.0" layoutY="341.0" text="Algorithm">
+                    <font>
+                        <Font size="14.0" />
+                    </font>
+                </Label>
+                <ComboBox id="asmCbbAlgorithms" layoutX="100.0" layoutY="337.0" prefHeight="25.0" prefWidth="155.0" />
+                <Label layoutX="355.0" layoutY="341.0" text="Mode">
+                    <font>
+                        <Font size="14.0" />
+                    </font>
+                </Label>
+                <ComboBox id="asmCbbMode" layoutX="420.0" layoutY="337.0" prefHeight="25.0" prefWidth="155.0" />
+                <Label layoutX="28.0" layoutY="398.0" text="Key size">
+                    <font>
+                        <Font size="14.0" />
+                    </font>
+                </Label>
+                <ComboBox id="asmCbbKeySize" layoutX="100.0" layoutY="394.0" prefHeight="25.0" prefWidth="155.0" />
+                <Label layoutX="355.0" layoutY="398.0" text="Padding">
+                    <font>
+                        <Font size="14.0" />
+                    </font>
+                </Label>
+                <ComboBox id="asmCbbPadding" layoutX="419.0" layoutY="394.0" prefHeight="25.0" prefWidth="155.0" />
+
+                <RadioButton id="asmRdbtnEn" layoutX="179.0" layoutY="80.0" mnemonicParsing="false" text="Encryption">
+                    <font>
+                        <Font size="16.0" />
+                    </font>
+                </RadioButton>
+                <RadioButton id="asmRdbtnDe" layoutX="326.0" layoutY="80.0" mnemonicParsing="false" text="Decryption">
+                    <font>
+                        <Font size="16.0" />
+                    </font>
+                </RadioButton>
+
+                <ProgressBar id="asmProb" layoutX="31.0" layoutY="452.0" prefHeight="18.0" prefWidth="564.0" progress="0.0" visible="false" />
+                <Button id="asmBtnSt" layoutX="227.0" layoutY="494.0" mnemonicParsing="false" prefHeight="43.0" prefWidth="172.0" text="Start">
+                    <font>
+                        <Font size="16.0" />
+                    </font>
+                </Button>
+                <Separator layoutX="6.0" layoutY="293.0" prefWidth="600.0" />
+                <Separator layoutX="6.0" layoutY="124.0" prefWidth="600.0" />
+                <Separator layoutX="310.0" layoutY="293.0" orientation="VERTICAL" prefHeight="130.0" prefWidth="6.0" />
+                <Label layoutX="127.0" layoutY="302.0" text="Require">
+                    <font>
+                        <Font size="16.0" />
+                    </font>
+                </Label>
+                <Label layoutX="457.0" layoutY="302.0" text="Option">
+                    <font>
+                        <Font size="16.0" />
+                    </font>
+                </Label>
+            </AnchorPane>
+        </Tab>
+    </TabPane>
+    <MenuBar prefHeight="30.0" prefWidth="600.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+        <Menu mnemonicParsing="false" text="File">
+            <MenuItem id="mniExit" mnemonicParsing="false" onAction="#closeApp" text="Exit" />
+        </Menu>
+        <Menu mnemonicParsing="false" text="Help">
+            <MenuItem mnemonicParsing="false" onAction="#about" text="About" />
+        </Menu>
+    </MenuBar>
+</AnchorPane>
