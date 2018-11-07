@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
+import javax.swing.*;
 import java.io.File;
 
 public class Main extends Application {
@@ -30,7 +31,8 @@ public class Main extends Application {
         primaryStage.getIcons().add(new Image(Main.class.getResourceAsStream("icon.png")));
 
         //set icon for macOS
-//        com.apple.eawt.Application.getApplication().setDockIconImage(new ImageIcon(Main.class.getResource("icon.png")).getImage());
+        if("Mac OS X".equals(System.getProperty("os.name")))
+        com.apple.eawt.Application.getApplication().setDockIconImage(new ImageIcon(Main.class.getResource("icon.png")).getImage());
 
         //create scene
         Scene scene = new Scene(root);
