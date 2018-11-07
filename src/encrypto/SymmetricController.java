@@ -94,6 +94,19 @@ public class SymmetricController {
                         sliderKeySize.setValue(112);
                         sliderKeySize.setSnapToTicks(true);
                         break;
+                    case "Blowfish":
+                        comboBoxMode.setDisable(false);
+                        comboBoxMode.getItems().clear();
+                        sliderKeySize.setDisable(false);
+                        comboBoxPadding.getItems().clear();
+                        comboBoxMode.getItems().addAll("CBC", "ECB", "PCBC", "CFB", "OFB", "CTR");
+                        sliderKeySize.setMin(0);
+                        sliderKeySize.setMax(2040);
+                        sliderKeySize.setBlockIncrement(1);
+                        sliderKeySize.setMajorTickUnit(2046);
+                        sliderKeySize.setMinorTickCount(0);
+                        sliderKeySize.setValue(1024);
+                        break;
                     case "RC2":
                         comboBoxMode.setDisable(false);
                         comboBoxMode.getItems().clear();
@@ -103,8 +116,8 @@ public class SymmetricController {
                         sliderKeySize.setMin(40);
                         sliderKeySize.setMax(1024);
                         sliderKeySize.setBlockIncrement(1);
-                        sliderKeySize.setMajorTickUnit(1);
-                        sliderKeySize.setMinorTickCount(0);
+                        sliderKeySize.setMajorTickUnit(1024);
+                        sliderKeySize.setMinorTickCount(40);
                         sliderKeySize.setValue(512);
                         break;
                     case "RC4":
@@ -116,22 +129,22 @@ public class SymmetricController {
                         sliderKeySize.setMin(1);
                         sliderKeySize.setMax(256);
                         sliderKeySize.setBlockIncrement(1);
-                        sliderKeySize.setMajorTickUnit(1);
-                        sliderKeySize.setMinorTickCount(0);
+                        sliderKeySize.setMajorTickUnit(256);
+                        sliderKeySize.setMinorTickCount(1);
                         sliderKeySize.setValue(128);
                         break;
                     case "RC5":
-                        comboBoxMode.setDisable(false);
+                        comboBoxMode.setDisable(true);
                         comboBoxMode.getItems().clear();
                         sliderKeySize.setDisable(false);
+                        comboBoxPadding.setDisable(true);
                         comboBoxPadding.getItems().clear();
-                        comboBoxMode.getItems().addAll("CBC", "ECB", "PCBC", "CFB", "OFB", "CTR");
-                        sliderKeySize.setMin(40);
-                        sliderKeySize.setMax(1024);
+                        sliderKeySize.setMin(0);
+                        sliderKeySize.setMax(2040);
                         sliderKeySize.setBlockIncrement(1);
-                        sliderKeySize.setMajorTickUnit(1);
+                        sliderKeySize.setMajorTickUnit(2040);
                         sliderKeySize.setMinorTickCount(0);
-                        sliderKeySize.setValue(512);
+                        sliderKeySize.setValue(1024);
                         break;
                 }
         });
