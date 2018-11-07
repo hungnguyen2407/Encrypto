@@ -45,7 +45,7 @@ public class SymmetricController {
 
         //Combo box algorithms
         comboBoxAlgorithm.getItems().addAll(
-                "AES", "DES", "DESede", "Blowfish", "RC2", "RC5"
+                "AES", "DES", "DESede", "Blowfish", "RC2", "RC4", "RC5"
         );
 
         //Handler for choose algorithm, mode, key size, padding
@@ -106,6 +106,19 @@ public class SymmetricController {
                         sliderKeySize.setMajorTickUnit(1);
                         sliderKeySize.setMinorTickCount(0);
                         sliderKeySize.setValue(512);
+                        break;
+                    case "RC4":
+                        comboBoxMode.setDisable(true);
+                        comboBoxMode.getItems().clear();
+                        sliderKeySize.setDisable(false);
+                        comboBoxPadding.setDisable(true);
+                        comboBoxPadding.getItems().clear();
+                        sliderKeySize.setMin(1);
+                        sliderKeySize.setMax(256);
+                        sliderKeySize.setBlockIncrement(1);
+                        sliderKeySize.setMajorTickUnit(1);
+                        sliderKeySize.setMinorTickCount(0);
+                        sliderKeySize.setValue(128);
                         break;
                     case "RC5":
                         comboBoxMode.setDisable(false);
@@ -172,8 +185,12 @@ public class SymmetricController {
         });
 
         rBtnEn.setOnAction(event -> {
+            btnStart.setDisable(false);
+            tfSrc.setDisable(false);
             tfSrc.clear();
+            tfDes.setDisable(false);
             tfDes.clear();
+            tfKey.setDisable(false);
             tfKey.clear();
             btnSrc.setDisable(false);
             btnSrc.setOnAction(event1 -> {
@@ -212,8 +229,12 @@ public class SymmetricController {
         });
 
         rBtnDe.setOnAction(event -> {
+            btnStart.setDisable(false);
+            tfSrc.setDisable(false);
             tfSrc.clear();
+            tfDes.setDisable(false);
             tfDes.clear();
+            tfKey.setDisable(false);
             tfKey.clear();
             btnSrc.setDisable(false);
             btnSrc.setOnAction(event14 -> {
@@ -249,7 +270,7 @@ public class SymmetricController {
 
 
         btnStart.setOnAction(event -> {
-            if (!fileInput.exists()) {
+            if (tfSrc.getText() == null | "".equals(tfSrc.getText()) || !fileInput.exists()) {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
                 alert.setTitle("File is missing");
                 alert.setHeaderText(null);
@@ -353,5 +374,9 @@ public class SymmetricController {
         sliderKeySize.setDisable(false);
         comboBoxMode.setDisable(false);
         comboBoxPadding.setDisable(false);
+        if (comboBoxAlgorithm.getSelectionModel().getSelectedItem().equals("RC4")) {
+            comboBoxMode.setDisable(true);
+            comboBoxPadding.setDisable(true);
+        }
     }
 }

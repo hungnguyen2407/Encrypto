@@ -37,10 +37,10 @@
         </font>
     </Label>
     <Separator layoutX="114.0" layoutY="244.0" prefHeight="3.0" prefWidth="403.0"/>
-    <JFXTextField fx:id="tfSrc" layoutX="34.0" layoutY="302.0" prefHeight="25.0" prefWidth="421.0"/>
-    <JFXTextField fx:id="tfDes" layoutX="37.0" layoutY="367.0" prefHeight="25.0" prefWidth="421.0"/>
-    <JFXButton fx:id="btnDes" layoutX="459.0" layoutY="367.0" mnemonicParsing="false" text="Choose"/>
-    <JFXButton fx:id="btnStart" layoutX="209.0" layoutY="516.0" mnemonicParsing="false" prefHeight="37.0"
+    <JFXTextField fx:id="tfSrc" disable="true" layoutX="34.0" layoutY="302.0" prefHeight="25.0" prefWidth="421.0"/>
+    <JFXTextField fx:id="tfDes" disable="true" layoutX="37.0" layoutY="367.0" prefHeight="25.0" prefWidth="421.0"/>
+    <JFXButton fx:id="btnDes" disable="true" layoutX="459.0" layoutY="367.0" mnemonicParsing="false" text="Choose"/>
+    <JFXButton fx:id="btnStart" disable="true" layoutX="209.0" layoutY="516.0" mnemonicParsing="false" prefHeight="37.0"
                prefWidth="124.0" text="Start">
         <font>
             <Font size="16.0"/>
@@ -54,8 +54,8 @@
     <JFXSlider fx:id="sliderKeySize" blockIncrement="64.0" disable="true" layoutX="121.0" layoutY="167.0"
                prefHeight="14.0" prefWidth="150.0" showTickLabels="true"/>
     <Label layoutX="33.0" layoutY="408.0" text="Key location"/>
-    <JFXTextField fx:id="tfKey" layoutX="37.0" layoutY="434.0" prefHeight="25.0" prefWidth="421.0"/>
-    <JFXButton fx:id="btnKey" layoutX="459.0" layoutY="434.0" mnemonicParsing="false" text="Choose"/>
+    <JFXTextField fx:id="tfKey" disable="true" layoutX="37.0" layoutY="434.0" prefHeight="25.0" prefWidth="421.0"/>
+    <JFXButton fx:id="btnKey" disable="true" layoutX="459.0" layoutY="434.0" mnemonicParsing="false" text="Choose"/>
     <JFXProgressBar fx:id="progressBar" layoutX="94.0" layoutY="498.0" prefHeight="3.0" prefWidth="349.0" progress="0.0"
                     visible="false"/>
     <Separator layoutX="16.0" layoutY="481.0" prefHeight="3.0" prefWidth="502.0"/>
@@ -82,7 +82,7 @@
     </JFXRadioButton>
     <JFXRadioButton fx:id="rBtnDe" layoutX="301.0" layoutY="54.0" mnemonicParsing="false" text="Decryption"
                     toggleGroup="$cryptography"/>
-    <JFXButton fx:id="btnSrc" layoutX="459.0" layoutY="302.0" mnemonicParsing="false" text="Choose"/>
+    <JFXButton fx:id="btnSrc" disable="true" layoutX="459.0" layoutY="302.0" mnemonicParsing="false" text="Choose"/>
     <JFXButton fx:id="btnStop" disable="true" layoutX="209.0" layoutY="516.0" mnemonicParsing="false" prefHeight="37.0"
                prefWidth="124.0" text="Stop" visible="false">
         <font>
