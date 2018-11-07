@@ -1,6 +1,8 @@
 package encrypto;
 
 import javafx.concurrent.Task;
+import org.bouncycastle.crypto.engines.RC564Engine;
+import org.bouncycastle.crypto.params.RC5Parameters;
 
 import javax.crypto.*;
 import javax.crypto.spec.IvParameterSpec;
@@ -97,8 +99,9 @@ public class SymmetricEncryptionTask extends Task<File> {
             cipher = Cipher.getInstance(algorithm + "/" + mode + "/" + padding);
             cipher.init(Cipher.ENCRYPT_MODE, key, new RC2ParameterSpec(Integer.parseInt(keySize)));
         } else if ("RC5".equals(algorithm)) {
-            cipher = Cipher.getInstance(algorithm);
-            cipher.init(Cipher.ENCRYPT_MODE, key);
+            RC564Engine rc564Engine = new RC564Engine();
+            rc564Engine.init(true, new RC5Parameters(key.getEncoded(), 20));
+            //TODO
         } else {
             cipher = Cipher.getInstance(algorithm + "/" + mode + "/" + padding);
             cipher.init(Cipher.ENCRYPT_MODE, key, ivParameterSpec);
