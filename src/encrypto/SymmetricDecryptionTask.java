@@ -1,6 +1,8 @@
 package encrypto;
 
 import javafx.concurrent.Task;
+import org.bouncycastle.crypto.engines.RC564Engine;
+import org.bouncycastle.crypto.params.RC5Parameters;
 
 import javax.crypto.*;
 import javax.crypto.spec.IvParameterSpec;
@@ -39,11 +41,50 @@ public class SymmetricDecryptionTask extends Task<File> {
 
     private void decryptHandler() throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IOException, InvalidAlgorithmParameterException, BadPaddingException, IllegalBlockSizeException {
         FileInputStream fis = new FileInputStream(key);
+        FileOutputStream fos = new FileOutputStream(fileDes);
         byte[] container = new byte[1024];
         int byteRead, i = 0;
         byteRead = fis.read(container);
+        if ("RC5".equals(algorithm)) {
+            container = new byte[Integer.parseInt(keySize)];
+            fis.read(container);
+            RC564Engine rc564Engine = new RC564Engine();
+            rc564Engine.init(false, new RC5Parameters(container, 20));
+            fis = new FileInputStream(fileSrc);
+            fos = new FileOutputStream(fileDes);
+            while ((byteRead = fis.read(container)) != -1) {
+                byte[] output = new byte[Integer.parseInt(keySize)];
+                rc564Engine.processBlock(container, 0, output, 0);
+                fos.write(output,0, byteRead);
+                this.updateProgress((double) i * Integer.parseInt(keySize), fileSrc.length());
+                i++;
+            }
+            fos.flush();
+            fis.close();
+            fos.close();
+            return;
+        }
         SecretKey key = new SecretKeySpec(container, 0, byteRead, algorithm);
         Cipher cipher;
+        if ("RC4".equals(algorithm)) {
+            RC4 rc4 = new RC4(key.getEncoded());
+            fis = new FileInputStream(fileSrc);
+            fos = new FileOutputStream(fileDes);
+
+            container = new byte[1024];
+            while (fis.read(container) != -1) {
+                byte[] output = rc4.decrypt(container);
+                if (output != null) {
+                    fos.write(output);
+                }
+                this.updateProgress((double) i * 1024, fileSrc.length());
+                i++;
+            }
+            fos.flush();
+            fis.close();
+            fos.close();
+            return;
+        }
         if ("AES".equals(algorithm))
             ivParameterSpec = new IvParameterSpec(new byte[16]);
         if (mode == null | "".equals(mode)) {
@@ -55,16 +96,13 @@ public class SymmetricDecryptionTask extends Task<File> {
         } else if ("RC2".equals(algorithm)) {
             cipher = Cipher.getInstance(algorithm + "/" + mode + "/" + padding);
             cipher.init(Cipher.DECRYPT_MODE, key, new RC2ParameterSpec(Integer.parseInt(keySize)));
-        } else if ("RC5".equals(algorithm)) {
-            cipher = Cipher.getInstance(algorithm);
-            cipher.init(Cipher.DECRYPT_MODE, key);
         } else {
             cipher = Cipher.getInstance(algorithm + "/" + mode + "/" + padding);
             cipher.init(Cipher.DECRYPT_MODE, key, ivParameterSpec);
         }
 
         fis = new FileInputStream(fileSrc);
-        FileOutputStream fos = new FileOutputStream(fileDes);
+
 
         while ((byteRead = fis.read(container)) != -1) {
             byte[] output = cipher.update(container, 0, byteRead);

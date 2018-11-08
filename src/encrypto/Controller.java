@@ -20,7 +20,7 @@ public class Controller {
     public void about() {
         Alert dialog = new Alert(Alert.AlertType.INFORMATION);
         dialog.setTitle("About");
-        dialog.setHeaderText("Encrypto v1.4.2");
+        dialog.setHeaderText("Encrypto v1.4.3");
         dialog.setContentText("Copyright © 2018 Nguyen Hoang Hung.");
         dialog.showAndWait();
     }

@@ -42,27 +42,42 @@ public class SymmetricEncryptionTask extends Task<File> {
 
     private void encryptHandler() throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IOException, BadPaddingException, IllegalBlockSizeException, InvalidAlgorithmParameterException {
         SecretKey key;
-        FileInputStream fis;
+        FileInputStream fis = new FileInputStream(fileSrc);
         FileOutputStream fos;
-        if(keyDes.exists())
-        {
-            fis = new FileInputStream(keyDes);
-            byte[] container = new byte[1024];
-            int byteRead;
-            byteRead = fis.read(container);
-            key = new SecretKeySpec(container, 0, byteRead, algorithm);
 
-        } else {
-            KeyGenerator keyGenerator = KeyGenerator.getInstance(algorithm);
-            keyGenerator.init(Integer.parseInt(keySize));
-            key = keyGenerator.generateKey();
+        if ("RC5".equals(algorithm)) {
+            RC564Engine rc564Engine = new RC564Engine();
+            rc564Engine.init(true, new RC5Parameters(new byte[Integer.parseInt(keySize)], 20));
 
             //Save key file
             fos = new FileOutputStream(keyDes);
-            fos.write(key.getEncoded());
+            fos.write(new byte[Integer.parseInt(keySize)]);
             fos.flush();
             fos.close();
+            fos = new FileOutputStream(fileDes);
+            int byteRead, i = 0;
+            byte[] container = new byte[Integer.parseInt(keySize)];
+            while ((byteRead = fis.read(container)) != -1) {
+                byte[] output = new byte[Integer.parseInt(keySize)];
+                rc564Engine.processBlock(container, 0, output, 0);
+                fos.write(output,0, byteRead);
+                this.updateProgress((double) i * Integer.parseInt(keySize), fileSrc.length());
+                i++;
+            }
+            fos.flush();
+            fis.close();
+            fos.close();
+            return;
         }
+        KeyGenerator keyGenerator = KeyGenerator.getInstance(algorithm);
+        keyGenerator.init(Integer.parseInt(keySize));
+        key = keyGenerator.generateKey();
+
+        //Save key file
+        fos = new FileOutputStream(keyDes);
+        fos.write(key.getEncoded());
+        fos.flush();
+        fos.close();
 
         Cipher cipher;
         if ("RC4".equals(algorithm)) {
@@ -79,7 +94,6 @@ public class SymmetricEncryptionTask extends Task<File> {
                     fos.write(output);
                 }
                 this.updateProgress((double) i * 1024, fileSrc.length());
-                updatePercent(i);
                 i++;
             }
             fos.flush();
@@ -98,15 +112,11 @@ public class SymmetricEncryptionTask extends Task<File> {
         } else if ("RC2".equals(algorithm)) {
             cipher = Cipher.getInstance(algorithm + "/" + mode + "/" + padding);
             cipher.init(Cipher.ENCRYPT_MODE, key, new RC2ParameterSpec(Integer.parseInt(keySize)));
-        } else if ("RC5".equals(algorithm)) {
-            RC564Engine rc564Engine = new RC564Engine();
-            rc564Engine.init(true, new RC5Parameters(key.getEncoded(), 20));
-            //TODO
         } else {
             cipher = Cipher.getInstance(algorithm + "/" + mode + "/" + padding);
             cipher.init(Cipher.ENCRYPT_MODE, key, ivParameterSpec);
         }
-        fis = new FileInputStream(fileSrc);
+
         fos = new FileOutputStream(fileDes);
 
         byte[] container = new byte[1024];
@@ -118,7 +128,6 @@ public class SymmetricEncryptionTask extends Task<File> {
                 fos.write(output);
             }
             this.updateProgress((double) i * 1024, fileSrc.length());
-            updatePercent(i);
             i++;
         }
 
@@ -126,14 +135,5 @@ public class SymmetricEncryptionTask extends Task<File> {
         fos.flush();
         fis.close();
         fos.close();
-    }
-
-    private void updatePercent(int i) {
-        this.updateMessage(((int) ((i * 1024) / fileSrc.length()) * 100) + "%");
-//        try {
-//            Thread.sleep(100);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
     }
 }

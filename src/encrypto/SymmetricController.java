@@ -24,6 +24,7 @@ public class SymmetricController {
     private JFXComboBox<String> comboBoxAlgorithm, comboBoxMode, comboBoxPadding;
     @FXML
     private JFXSlider sliderKeySize;
+
     private File fileInput, fileOutput, key;
 
     public SymmetricController() {
@@ -139,12 +140,12 @@ public class SymmetricController {
                         sliderKeySize.setDisable(false);
                         comboBoxPadding.setDisable(true);
                         comboBoxPadding.getItems().clear();
-                        sliderKeySize.setMin(0);
-                        sliderKeySize.setMax(2040);
+                        sliderKeySize.setMin(1);
+                        sliderKeySize.setMax(255);
                         sliderKeySize.setBlockIncrement(1);
-                        sliderKeySize.setMajorTickUnit(2040);
-                        sliderKeySize.setMinorTickCount(0);
-                        sliderKeySize.setValue(1024);
+                        sliderKeySize.setMajorTickUnit(255);
+                        sliderKeySize.setMinorTickCount(1);
+                        sliderKeySize.setValue(128);
                         break;
                 }
         });
@@ -320,7 +321,7 @@ public class SymmetricController {
                 });
             } else if (rBtnDe.isSelected()) {
                 makeViewWhenStart();
-                final SymmetricDecryptionTask symmetricDecryptionTask = new SymmetricDecryptionTask(comboBoxAlgorithm.getSelectionModel().getSelectedItem(), comboBoxMode.getSelectionModel().getSelectedItem(), String.valueOf(sliderKeySize.getValue()), comboBoxPadding.getSelectionModel().getSelectedItem(), fileInput, fileOutput, key);
+                final SymmetricDecryptionTask symmetricDecryptionTask = new SymmetricDecryptionTask(comboBoxAlgorithm.getSelectionModel().getSelectedItem(), comboBoxMode.getSelectionModel().getSelectedItem(), String.valueOf((int) sliderKeySize.getValue()), comboBoxPadding.getSelectionModel().getSelectedItem(), fileInput, fileOutput, key);
                 progressBar.progressProperty().bind(symmetricDecryptionTask.progressProperty());
                 symmetricDecryptionTask.addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED, event18 -> {
                     resetViewWhenDone();
