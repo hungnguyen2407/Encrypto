@@ -202,6 +202,9 @@ public class SymmetricController {
             btnStart.setDisable(false);
             tfSrc.setDisable(false);
             tfSrc.clear();
+            tfSrc.setOnAction(event1 -> {
+                fileInput = new File(tfSrc.getText());
+            });
             tfDes.setDisable(false);
             tfDes.clear();
             tfKey.setDisable(false);

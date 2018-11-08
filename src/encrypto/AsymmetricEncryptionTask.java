@@ -11,6 +11,11 @@ public class AsymmetricEncryptionTask  extends Task<File> {
 
     @Override
     protected File call() {
-        return null;
+        encryptHandler();
+        return fileDes;
+    }
+
+    private void encryptHandler() {
+
     }
 }
