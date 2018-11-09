@@ -8,9 +8,12 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 import javax.swing.*;
-import java.io.File;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 public class Main extends Application {
+
+    static final String APP_VERSION = "1.4.7";
 
     public static void main(String[] args) {
         launch(args);
@@ -29,8 +32,17 @@ public class Main extends Application {
         primaryStage.getIcons().add(new Image(Main.class.getResourceAsStream("icon.png")));
 
         //set icon for macOS
-        if ("Mac OS X".equals(System.getProperty("os.name")))
-            com.apple.eawt.Application.getApplication().setDockIconImage(new ImageIcon(Main.class.getResource("icon.png")).getImage());
+        try {
+            Class util = Class.forName("com.apple.eawt.Application");
+            Method getApplication = util.getMethod("getApplication");
+            Object application = getApplication.invoke(util);
+            Class params[] = new Class[1];
+            params[0] = Image.class;
+            Method setDockIconImage = util.getMethod("setDockIconImage", params);
+            setDockIconImage.invoke(application, new ImageIcon(Main.class.getResource("icon.png")).getImage());
+        } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
 
         //create scene
         Scene scene = new Scene(root);
