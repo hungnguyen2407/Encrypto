@@ -1,19 +1,19 @@
 package encrypto;
 
 import javafx.application.Application;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
-import javafx.stage.Stage;
 
-import javax.swing.*;
+
+import javafx.stage.Stage;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 public class Main extends Application {
 
-    static final String APP_VERSION = "1.4.7";
+    static final String APP_VERSION = "1.4.8";
 
     public static void main(String[] args) {
         launch(args);
@@ -29,7 +29,7 @@ public class Main extends Application {
         primaryStage.setTitle("Encrypto");
 
         //set icon for Windows
-        primaryStage.getIcons().add(new Image(Main.class.getResourceAsStream("icon.png")));
+        primaryStage.getIcons().add(new javafx.scene.image.Image(Main.class.getResourceAsStream("icon.png")));
 
         //set icon for macOS
         try {
@@ -37,9 +37,9 @@ public class Main extends Application {
             Method getApplication = util.getMethod("getApplication");
             Object application = getApplication.invoke(util);
             Class params[] = new Class[1];
-            params[0] = Image.class;
+            params[0] = java.awt.Image.class;
             Method setDockIconImage = util.getMethod("setDockIconImage", params);
-            setDockIconImage.invoke(application, new ImageIcon(Main.class.getResource("icon.png")).getImage());
+            setDockIconImage.invoke(application, SwingFXUtils.fromFXImage(new javafx.scene.image.Image(Main.class.getResourceAsStream("icon.png")), null));
         } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
             e.printStackTrace();
         }
