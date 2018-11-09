@@ -222,7 +222,7 @@ public class SymmetricController {
                 fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Encrypted file (*.encrypt)", "*.encrypt"));
                 fileOutput = fileChooser.showSaveDialog(null);
                 if (fileOutput != null) {
-                    if (!fileOutput.getName().contains(".encrypt")) {
+                    if (!fileOutput.getName().endsWith(".encrypt")) {
                         fileOutput = new File(fileOutput.getAbsolutePath() + ".encrypt");
                     }
                     tfDes.setText(fileOutput.getAbsolutePath());
@@ -235,7 +235,7 @@ public class SymmetricController {
                 fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Key file (*.key)", "*.key"));
                 key = fileChooser.showSaveDialog(null);
                 if (key != null) {
-                    if (!key.getName().contains(".key")) {
+                    if (!key.getName().endsWith(".key")) {
                         key = new File(key.getAbsolutePath() + ".key");
                     }
                     tfKey.setText(key.getAbsolutePath());
@@ -266,7 +266,7 @@ public class SymmetricController {
                 fileChooser.setTitle("Save file");
                 fileOutput = fileChooser.showSaveDialog(null);
                 if (fileOutput != null) {
-                    if (!fileOutput.getName().contains(".encrypt")) {
+                    if (!fileOutput.getName().endsWith(".encrypt")) {
                         fileOutput = new File(fileOutput.getAbsolutePath() + ".encrypt");
                     }
                     tfDes.setText(fileOutput.getAbsolutePath());
