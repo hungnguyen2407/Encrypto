@@ -202,9 +202,7 @@ public class SymmetricController {
             btnStart.setDisable(false);
             tfSrc.setDisable(false);
             tfSrc.clear();
-            tfSrc.setOnAction(event1 -> {
-                fileInput = new File(tfSrc.getText());
-            });
+            tfSrc.setOnAction(event1 -> fileInput = new File(tfSrc.getText()));
             tfDes.setDisable(false);
             tfDes.clear();
             tfKey.setDisable(false);
@@ -224,7 +222,7 @@ public class SymmetricController {
                 fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Encrypted file (*.encrypt)", "*.encrypt"));
                 fileOutput = fileChooser.showSaveDialog(null);
                 if (fileOutput != null) {
-                    if (!fileOutput.getName().contains(".")) {
+                    if (!fileOutput.getName().contains(".encrypt")) {
                         fileOutput = new File(fileOutput.getAbsolutePath() + ".encrypt");
                     }
                     tfDes.setText(fileOutput.getAbsolutePath());
@@ -237,7 +235,7 @@ public class SymmetricController {
                 fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Key file (*.key)", "*.key"));
                 key = fileChooser.showSaveDialog(null);
                 if (key != null) {
-                    if (!key.getName().contains(".")) {
+                    if (!key.getName().contains(".key")) {
                         key = new File(key.getAbsolutePath() + ".key");
                     }
                     tfKey.setText(key.getAbsolutePath());
@@ -268,7 +266,7 @@ public class SymmetricController {
                 fileChooser.setTitle("Save file");
                 fileOutput = fileChooser.showSaveDialog(null);
                 if (fileOutput != null) {
-                    if (!fileOutput.getName().contains(".")) {
+                    if (!fileOutput.getName().contains(".encrypt")) {
                         fileOutput = new File(fileOutput.getAbsolutePath() + ".encrypt");
                     }
                     tfDes.setText(fileOutput.getAbsolutePath());
