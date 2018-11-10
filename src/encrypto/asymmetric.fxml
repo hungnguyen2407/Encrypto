@@ -64,18 +64,14 @@
                 <Font size="14.0" />
             </font>
         </Label>
-        <Label layoutX="37.0" layoutY="84.0" text="Key size">
-            <font>
-                <Font size="14.0" />
-            </font>
-        </Label>
         <Label layoutX="288.0" layoutY="82.0" text="Padding">
             <font>
                 <Font size="14.0" />
             </font>
         </Label>
         <Separator layoutX="66.0" layoutY="164.0" prefHeight="3.0" prefWidth="450.0" />
-        <JFXButton fx:id="btnStart" disable="true" layoutX="208.0" layoutY="436.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="124.0" text="Start">
+        <JFXButton fx:id="btnStart" layoutX="208.0" layoutY="436.0" mnemonicParsing="false" prefHeight="37.0"
+                   prefWidth="124.0" text="Start">
             <font>
                 <Font size="16.0" />
             </font>
@@ -83,7 +79,7 @@
         <JFXComboBox fx:id="comboBoxAlgorithm" layoutX="121.0" layoutY="34.0" prefHeight="25.0" prefWidth="150.0" />
         <JFXComboBox fx:id="comboBoxMode" disable="true" layoutX="353.0" layoutY="36.0" prefHeight="25.0" prefWidth="150.0" />
         <JFXComboBox fx:id="comboBoxPadding" disable="true" layoutX="354.0" layoutY="76.0" prefHeight="25.0" prefWidth="150.0" />
-        <JFXSlider fx:id="sliderKeySize" blockIncrement="64.0" disable="true" layoutX="120.0" layoutY="87.0" prefHeight="14.0" prefWidth="150.0" showTickLabels="true" />
+        <JFXTextField fx:id="tfKey" layoutX="123.0" layoutY="188.0" prefHeight="25.0" prefWidth="317.0"/>
         <JFXProgressBar fx:id="progressBar" layoutX="93.0" layoutY="418.0" prefHeight="3.0" prefWidth="349.0" progress="0.0" visible="false" />
         <Separator layoutX="15.0" layoutY="401.0" prefHeight="3.0" prefWidth="502.0" />
         <Separator layoutX="515.0" layoutY="164.0" orientation="VERTICAL" prefHeight="237.0" />
@@ -107,7 +103,18 @@
                 <Font size="16.0" />
             </font>
         </JFXButton>
-        <JFXTextArea fx:id="taInput" prefHeight="210.0" prefWidth="480.0" AnchorPane.leftAnchor="24.0"
-                     AnchorPane.topAnchor="180.0"/>
+        <JFXTextArea fx:id="taInput" layoutX="39.0" layoutY="259.0" prefHeight="131.0" prefWidth="461.0"
+                     AnchorPane.leftAnchor="39.0" AnchorPane.topAnchor="259.0"/>
+        <JFXButton fx:id="btnKey" layoutX="452.0" layoutY="188.0" mnemonicParsing="false" text="Choose"/>
+        <Label fx:id="lblKey" layoutX="37.0" layoutY="191.0" text="Public key">
+            <font>
+                <Font size="14.0"/>
+            </font>
+        </Label>
+        <Label fx:id="lblInput" layoutX="38.0" layoutY="237.0" prefHeight="20.0" prefWidth="71.0" text="Plain text">
+            <font>
+                <Font size="14.0"/>
+            </font>
+        </Label>
     </AnchorPane>
 </AnchorPane>

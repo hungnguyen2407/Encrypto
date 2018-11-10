@@ -4,8 +4,11 @@ import com.jfoenix.controls.*;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 
 import java.io.File;
@@ -19,9 +22,9 @@ public class AsymmetricController {
     @FXML
     private AnchorPane paneKeyPair, paneCrypto;
     @FXML
-    private JFXTextField tfPubKey, tfPriKey;
+    private JFXTextField tfPubKey, tfPriKey, tfKey;
     @FXML
-    private JFXButton btnStart, btnStop, btnPubKey, btnPriKey, btnCreate;
+    private JFXButton btnStart, btnStop, btnPubKey, btnPriKey, btnCreate, btnKey;
     @FXML
     private JFXRadioButton rBtnEn, rBtnDe, rBtnKeyPair;
     @FXML
@@ -29,9 +32,9 @@ public class AsymmetricController {
     @FXML
     private JFXComboBox<String> comboBoxAlgorithm, comboBoxMode, comboBoxPadding, comboBoxKeyPairAlgorithm;
     @FXML
-    private JFXSlider sliderKeySize;
-    @FXML
     private JFXTextArea taInput;
+    @FXML
+    private Label lblKey, lblInput;
     private File publicKey, privateKey;
 
     /**
@@ -68,20 +71,228 @@ public class AsymmetricController {
 
         cryptoRadioBtnDeHandler();
 
+        comboBoxAlgorithmHandler();
+
+    }
+
+    /**
+     * Handler for algorithm combobox
+     */
+    private void comboBoxAlgorithmHandler() {
+        comboBoxAlgorithm.getItems().addAll("RSA", "DSA");
+        comboBoxAlgorithm.setOnAction(event -> {
+            comboBoxModeHandler();
+            comboBoxPaddingHandler();
+        });
+    }
+
+    /**
+     * Handler for mode combobox
+     */
+    private void comboBoxModeHandler() {
+        comboBoxMode.setDisable(false);
+        switch (comboBoxAlgorithm.getSelectionModel().getSelectedItem()) {
+            case "RSA":
+                comboBoxMode.getItems().clear();
+                comboBoxMode.getItems().addAll("ECB");
+                comboBoxMode.setValue("ECB");
+                break;
+            case "DSA":
+                comboBoxMode.getItems().clear();
+                comboBoxMode.getItems().addAll("");
+                comboBoxMode.setValue("");
+                break;
+        }
+    }
+
+    /**
+     * Handler for padding combobox
+     */
+    private void comboBoxPaddingHandler() {
+        comboBoxPadding.setDisable(false);
+        switch (comboBoxAlgorithm.getSelectionModel().getSelectedItem()) {
+            case "RSA":
+                comboBoxPadding.getItems().clear();
+                comboBoxPadding.getItems().addAll("PKCS1Padding", "OAEPWithSHA-1AndMGF1Padding", "OAEPWithSHA-256AndMGF1Padding");
+                comboBoxPadding.setValue("PKCS1Padding");
+                break;
+            case "DSA":
+                comboBoxPadding.getItems().clear();
+                comboBoxPadding.getItems().addAll("");
+                comboBoxPadding.setValue("");
+                break;
+        }
     }
 
     /**
      * Handler for decryption radio button
      */
     private void cryptoRadioBtnDeHandler() {
-        //TODO
+        lblKeyDeHandler();
+        tfKeyDeHandler();
+        btnKeyDeHandler();
+        lblInputDeHandler();
+        btnStartDeHandler();
+    }
+
+    private void btnStartDeHandler() {
+
+    }
+
+    private void lblInputDeHandler() {
+        lblInput.setText("Cipher text");
+    }
+
+    private void btnKeyDeHandler() {
+        btnKey.setOnAction(event -> {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Private key (*.prikey)", "*.prikey"));
+            privateKey = fileChooser.showOpenDialog(null);
+            if (!privateKey.exists()) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Warning");
+                alert.setHeaderText(null);
+                alert.setContentText("Private key is not existed.");
+            } else if (!privateKey.getName().endsWith(".prikey")) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Warning");
+                alert.setHeaderText(null);
+                alert.setContentText("Private key is invalid.");
+            } else {
+                tfKey.setText(privateKey.getAbsolutePath());
+            }
+        });
+    }
+
+    private void tfKeyDeHandler() {
+        tfKey.setOnAction(event -> {
+            File file = new File(tfKey.getText());
+            if (!file.exists()) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Warning");
+                alert.setHeaderText(null);
+                alert.setContentText("Private key is not existed.");
+            } else if (!file.getName().endsWith(".prikey")) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Warning");
+                alert.setHeaderText(null);
+                alert.setContentText("Private key is invalid.");
+            } else {
+                privateKey = file;
+            }
+        });
+    }
+
+    private void lblKeyDeHandler() {
+        lblKey.setText("Private key");
     }
 
     /**
      * Handler for encryption radio button
      */
     private void cryptoRadioBtnEnHandler() {
-        //TODO
+        lblKeyEnHandler();
+        tfKeyEnHandler();
+        btnKeyEnHandler();
+        lblInputEnHandler();
+        btnStartEnHandler();
+    }
+
+    private void btnStartEnHandler() {
+        btnStart.setOnAction(event -> {
+            if ("".equals(comboBoxAlgorithm.getSelectionModel().getSelectedItem()) | "".equals(comboBoxMode.getSelectionModel().getSelectedItem()) | "".equals(comboBoxPadding.getSelectionModel().getSelectedItem()) | "".equals(tfKey.getText()) | !privateKey.exists() | "".equals(taInput.getText())) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Warning");
+                alert.setHeaderText(null);
+                alert.setContentText("Please fill all the required field.");
+            } else {
+                disableCryptoPane();
+                AsymmetricEncryptionTask asymmetricEncryptionTask = new AsymmetricEncryptionTask(comboBoxAlgorithm.getSelectionModel().getSelectedItem(), comboBoxMode.getSelectionModel().getSelectedItem(), comboBoxPadding.getSelectionModel().getSelectedItem(), publicKey, taInput.getText().getBytes());
+                new Thread(asymmetricEncryptionTask).start();
+                asymmetricEncryptionTask.setOnSucceeded(event1 -> {
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Done!");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Your plain text had been encrypted. ");
+                    VBox dialogPaneContent = new VBox();
+                    TextArea textArea = new TextArea(asymmetricEncryptionTask.call());
+                    textArea.setEditable(false);
+                    dialogPaneContent.getChildren().addAll(new Label("Cipher text:"), textArea);
+                    alert.getDialogPane().setContent(dialogPaneContent);
+                    resetCryptoPane();
+                });
+                asymmetricEncryptionTask.setOnFailed(event1 -> {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Error");
+                    alert.setHeaderText(null);
+                    alert.setContentText("An error had occurred.");
+                    resetCryptoPane();
+                });
+                asymmetricEncryptionTask.setOnCancelled(event1 -> {
+                    resetCryptoPane();
+                });
+                btnStop.setOnAction(event1 -> {
+                    asymmetricEncryptionTask.cancel();
+                });
+            }
+        });
+    }
+
+    private void disableCryptoPane() {
+        paneCrypto.setDisable(true);
+    }
+
+    private void resetCryptoPane() {
+        paneCrypto.setDisable(false);
+    }
+
+    private void lblInputEnHandler() {
+        lblInput.setText("Plain text");
+    }
+
+    private void btnKeyEnHandler() {
+        btnKey.setOnAction(event -> {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Public key (*.pubkey)", "*.pubkey"));
+            privateKey = fileChooser.showOpenDialog(null);
+            if (!privateKey.exists()) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Warning");
+                alert.setHeaderText(null);
+                alert.setContentText("Public key is not existed.");
+            } else if (!privateKey.getName().endsWith(".pubkey")) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Warning");
+                alert.setHeaderText(null);
+                alert.setContentText("Public key is invalid.");
+            } else {
+
+                tfKey.setText(privateKey.getAbsolutePath());
+            }
+        });
+    }
+
+    private void tfKeyEnHandler() {
+        tfKey.setOnAction(event -> {
+            File file = new File(tfKey.getText());
+            if (!file.exists()) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Warning");
+                alert.setHeaderText(null);
+                alert.setContentText("Public key is not existed.");
+            } else if (!file.getName().endsWith(".pubkey")) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Warning");
+                alert.setHeaderText(null);
+                alert.setContentText("Public key is invalid.");
+            } else {
+                publicKey = file;
+            }
+        });
+    }
+
+    private void lblKeyEnHandler() {
+        lblKey.setText("Public key");
     }
 
     /**
