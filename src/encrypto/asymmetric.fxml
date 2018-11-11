@@ -84,7 +84,7 @@
         <Separator layoutX="15.0" layoutY="401.0" prefHeight="3.0" prefWidth="502.0" />
         <Separator layoutX="515.0" layoutY="164.0" orientation="VERTICAL" prefHeight="237.0" />
         <Separator layoutX="14.0" layoutY="164.0" orientation="VERTICAL" prefHeight="237.0" />
-        <Label layoutX="20.0" layoutY="152.0" text="Input">
+        <Label layoutX="20.0" layoutY="152.0" prefHeight="20.0" prefWidth="68.0" text="Input">
             <font>
                 <Font size="16.0" />
             </font>
@@ -111,7 +111,7 @@
                 <Font size="14.0"/>
             </font>
         </Label>
-        <Label fx:id="lblInput" layoutX="38.0" layoutY="237.0" prefHeight="20.0" prefWidth="71.0" text="Plain text">
+        <Label fx:id="lblInput" layoutX="38.0" layoutY="237.0" prefHeight="20.0" prefWidth="88.0" text="Plain text">
             <font>
                 <Font size="14.0"/>
             </font>

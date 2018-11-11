@@ -2,14 +2,12 @@ package encrypto;
 
 import javafx.concurrent.Task;
 
-import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 import java.io.File;
-import java.security.InvalidKeyException;
-import java.security.Key;
-import java.security.NoSuchAlgorithmException;
+import java.io.FileInputStream;
+import java.security.KeyFactory;
+import java.security.PublicKey;
+import java.security.spec.X509EncodedKeySpec;
 import java.util.Objects;
 
 public class AsymmetricEncryptionTask extends Task<String> {
@@ -27,32 +25,23 @@ public class AsymmetricEncryptionTask extends Task<String> {
     }
 
     @Override
-    protected String call() {
+    protected String call() throws Exception {
         return new String(Objects.requireNonNull(encryptHandler()));
     }
 
-    private byte[] encryptHandler() {
-        Cipher cipher = null;
-        try {
-            cipher = Cipher.getInstance(algorithm + "/" + mode + "/" + padding);
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
-            System.out.println("AsymmetricRSA.encrypt: " + e.getMessage());
-        }
-        try {
-            if (cipher != null) {
-                cipher.init(Cipher.ENCRYPT_MODE, (Key) publicKey);
-            }
-        } catch (InvalidKeyException e) {
-            System.out.println("AsymmetricRSA.encrypt: " + e.getMessage());
-        }
+    private byte[] encryptHandler() throws Exception {
 
-        try {
-            if (cipher != null) {
-                return cipher.doFinal(plainText);
-            }
-        } catch (IllegalBlockSizeException | BadPaddingException e) {
-            System.out.println("AsymmetricRSA.encrypt: " + e.getMessage());
-        }
-        return null;
+        FileInputStream keyfis = new FileInputStream(publicKey);
+        byte[] encKey = new byte[keyfis.available()];
+        keyfis.read(encKey);
+        keyfis.close();
+
+        X509EncodedKeySpec pubKeySpec = new X509EncodedKeySpec(encKey);
+        KeyFactory keyFactory = KeyFactory.getInstance(algorithm);
+        PublicKey pubKey = keyFactory.generatePublic(pubKeySpec);
+
+        Cipher cipher = Cipher.getInstance(algorithm + "/" + mode + "/" + padding);
+        cipher.init(Cipher.ENCRYPT_MODE, pubKey);
+        return cipher.doFinal(plainText);
     }
 }

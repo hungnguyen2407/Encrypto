@@ -133,10 +133,52 @@ public class AsymmetricController {
         btnKeyDeHandler();
         lblInputDeHandler();
         btnStartDeHandler();
+        taInputHandler();
+    }
+
+    private void taInputHandler() {
+        taInput.clear();
     }
 
     private void btnStartDeHandler() {
+        btnStart.setOnAction(event -> {
+            if ("".equals(comboBoxAlgorithm.getSelectionModel().getSelectedItem()) | "".equals(comboBoxMode.getSelectionModel().getSelectedItem()) | "".equals(comboBoxPadding.getSelectionModel().getSelectedItem()) | "".equals(tfKey.getText()) | !privateKey.exists() | "".equals(taInput.getText())) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Warning");
+                alert.setHeaderText(null);
+                alert.setContentText("Please fill all the required field.");
+            } else {
+                disableCryptoPane();
+                final AsymmetricDecryptionTask asymmetricDecryptionTask = new AsymmetricDecryptionTask(comboBoxAlgorithm.getSelectionModel().getSelectedItem(), comboBoxMode.getSelectionModel().getSelectedItem(), comboBoxPadding.getSelectionModel().getSelectedItem(), privateKey, taInput.getText().getBytes());
 
+                asymmetricDecryptionTask.setOnSucceeded(event1 -> {
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Done!");
+                    alert.setHeaderText("Your cipher text had been decrypted. ");
+                    VBox dialogPaneContent = new VBox();
+                    TextArea textArea = new TextArea(asymmetricDecryptionTask.getValue());
+                    textArea.setEditable(false);
+                    textArea.setScrollLeft(200);
+                    textArea.setPrefColumnCount(20);
+                    textArea.setPrefRowCount(10);
+                    dialogPaneContent.getChildren().addAll(new Label("Plain text:"), textArea);
+                    alert.getDialogPane().setContent(dialogPaneContent);
+                    alert.setResizable(true);
+                    alert.showAndWait();
+                    resetCryptoPane();
+                });
+
+                asymmetricDecryptionTask.setOnFailed(event1 -> {
+                    Ultilities.showExceptionHandler(asymmetricDecryptionTask);
+                    resetCryptoPane();
+                });
+                asymmetricDecryptionTask.setOnCancelled(event1 -> resetCryptoPane());
+
+                new Thread(asymmetricDecryptionTask).start();
+
+                btnStop.setOnAction(event1 -> asymmetricDecryptionTask.cancel());
+            }
+        });
     }
 
     private void lblInputDeHandler() {
@@ -165,8 +207,9 @@ public class AsymmetricController {
     }
 
     private void tfKeyDeHandler() {
-        tfKey.setOnAction(event -> {
-            File file = new File(tfKey.getText());
+        tfKey.clear();
+        tfKey.textProperty().addListener((observable, oldValue, newValue) -> {
+            File file = new File(newValue);
             if (!file.exists()) {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
                 alert.setTitle("Warning");
@@ -196,54 +239,60 @@ public class AsymmetricController {
         btnKeyEnHandler();
         lblInputEnHandler();
         btnStartEnHandler();
+        taInputHandler();
     }
 
     private void btnStartEnHandler() {
         btnStart.setOnAction(event -> {
-            if ("".equals(comboBoxAlgorithm.getSelectionModel().getSelectedItem()) | "".equals(comboBoxMode.getSelectionModel().getSelectedItem()) | "".equals(comboBoxPadding.getSelectionModel().getSelectedItem()) | "".equals(tfKey.getText()) | !privateKey.exists() | "".equals(taInput.getText())) {
+            if ("".equals(comboBoxAlgorithm.getSelectionModel().getSelectedItem()) | "".equals(comboBoxMode.getSelectionModel().getSelectedItem()) | "".equals(comboBoxPadding.getSelectionModel().getSelectedItem()) | "".equals(tfKey.getText()) | !publicKey.exists() | "".equals(taInput.getText())) {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
                 alert.setTitle("Warning");
                 alert.setHeaderText(null);
                 alert.setContentText("Please fill all the required field.");
             } else {
                 disableCryptoPane();
-                AsymmetricEncryptionTask asymmetricEncryptionTask = new AsymmetricEncryptionTask(comboBoxAlgorithm.getSelectionModel().getSelectedItem(), comboBoxMode.getSelectionModel().getSelectedItem(), comboBoxPadding.getSelectionModel().getSelectedItem(), publicKey, taInput.getText().getBytes());
-                new Thread(asymmetricEncryptionTask).start();
+                final AsymmetricEncryptionTask asymmetricEncryptionTask = new AsymmetricEncryptionTask(comboBoxAlgorithm.getSelectionModel().getSelectedItem(), comboBoxMode.getSelectionModel().getSelectedItem(), comboBoxPadding.getSelectionModel().getSelectedItem(), publicKey, taInput.getText().getBytes());
+
                 asymmetricEncryptionTask.setOnSucceeded(event1 -> {
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Done!");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Your plain text had been encrypted. ");
+                    alert.setHeaderText("Your plain text had been encrypted. ");
                     VBox dialogPaneContent = new VBox();
-                    TextArea textArea = new TextArea(asymmetricEncryptionTask.call());
+                    TextArea textArea = new TextArea(asymmetricEncryptionTask.getValue());
                     textArea.setEditable(false);
+                    textArea.setScrollLeft(200);
+                    textArea.setPrefColumnCount(20);
+                    textArea.setPrefRowCount(10);
                     dialogPaneContent.getChildren().addAll(new Label("Cipher text:"), textArea);
                     alert.getDialogPane().setContent(dialogPaneContent);
+                    alert.setResizable(true);
+                    alert.showAndWait();
                     resetCryptoPane();
                 });
+
                 asymmetricEncryptionTask.setOnFailed(event1 -> {
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Error");
-                    alert.setHeaderText(null);
-                    alert.setContentText("An error had occurred.");
+                    Ultilities.showExceptionHandler(asymmetricEncryptionTask);
                     resetCryptoPane();
                 });
-                asymmetricEncryptionTask.setOnCancelled(event1 -> {
-                    resetCryptoPane();
-                });
-                btnStop.setOnAction(event1 -> {
-                    asymmetricEncryptionTask.cancel();
-                });
+                asymmetricEncryptionTask.setOnCancelled(event1 -> resetCryptoPane());
+
+                new Thread(asymmetricEncryptionTask).start();
+
+                btnStop.setOnAction(event1 -> asymmetricEncryptionTask.cancel());
             }
         });
     }
 
     private void disableCryptoPane() {
         paneCrypto.setDisable(true);
+        progressBar.setVisible(true);
+        progressBar.setDisable(false);
     }
 
     private void resetCryptoPane() {
         paneCrypto.setDisable(false);
+        progressBar.setVisible(false);
+        progressBar.setDisable(true);
     }
 
     private void lblInputEnHandler() {
@@ -254,27 +303,28 @@ public class AsymmetricController {
         btnKey.setOnAction(event -> {
             FileChooser fileChooser = new FileChooser();
             fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Public key (*.pubkey)", "*.pubkey"));
-            privateKey = fileChooser.showOpenDialog(null);
-            if (!privateKey.exists()) {
+            publicKey = fileChooser.showOpenDialog(null);
+            if (!publicKey.exists()) {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
                 alert.setTitle("Warning");
                 alert.setHeaderText(null);
                 alert.setContentText("Public key is not existed.");
-            } else if (!privateKey.getName().endsWith(".pubkey")) {
+            } else if (!publicKey.getName().endsWith(".pubkey")) {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
                 alert.setTitle("Warning");
                 alert.setHeaderText(null);
                 alert.setContentText("Public key is invalid.");
             } else {
 
-                tfKey.setText(privateKey.getAbsolutePath());
+                tfKey.setText(publicKey.getAbsolutePath());
             }
         });
     }
 
     private void tfKeyEnHandler() {
-        tfKey.setOnAction(event -> {
-            File file = new File(tfKey.getText());
+        tfKey.clear();
+        tfKey.textProperty().addListener((observable, oldValue, newValue) -> {
+            File file = new File(newValue);
             if (!file.exists()) {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
                 alert.setTitle("Warning");
@@ -409,14 +459,22 @@ public class AsymmetricController {
                 paneKeyPair.setVisible(true);
                 paneKeyPair.setDisable(false);
             });
-        else
-            btnCrypto.setOnAction(event -> {
+        else if (btnCrypto.equals(rBtnEn)) {
+            rBtnEn.setOnAction(event -> {
                 paneCrypto.setVisible(true);
                 paneCrypto.setDisable(false);
                 paneKeyPair.setVisible(false);
                 paneKeyPair.setDisable(true);
+                cryptoRadioBtnEnHandler();
             });
+        } else if (btnCrypto.equals(rBtnDe)) {
+            rBtnDe.setOnAction(event -> {
+                paneCrypto.setVisible(true);
+                paneCrypto.setDisable(false);
+                paneKeyPair.setVisible(false);
+                paneKeyPair.setDisable(true);
+                cryptoRadioBtnDeHandler();
+            });
+        }
     }
-
-
 }

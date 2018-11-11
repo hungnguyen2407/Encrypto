@@ -1,7 +1,6 @@
 package encrypto;
 
 import com.jfoenix.controls.*;
-import javafx.concurrent.WorkerStateEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ToggleGroup;
@@ -307,7 +306,7 @@ public class SymmetricController {
                 makeViewWhenStart();
                 final SymmetricEncryptionTask symmetricEncryptionTask = new SymmetricEncryptionTask(comboBoxAlgorithm.getSelectionModel().getSelectedItem(), comboBoxMode.getSelectionModel().getSelectedItem(), String.valueOf((int) sliderKeySize.getValue()), comboBoxPadding.getSelectionModel().getSelectedItem(), fileInput, fileOutput, key);
                 progressBar.progressProperty().bind(symmetricEncryptionTask.progressProperty());
-                symmetricEncryptionTask.addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED, event17 -> {
+                symmetricEncryptionTask.setOnSucceeded(event1 -> {
                     resetViewWhenDone();
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Done!");
@@ -315,16 +314,18 @@ public class SymmetricController {
                     alert.setContentText("Your file had been encrypted.");
                     alert.showAndWait();
                 });
-                new Thread(symmetricEncryptionTask).start();
-                btnStop.setOnAction(event1 -> {
+                symmetricEncryptionTask.setOnFailed(event1 -> {
                     resetViewWhenDone();
-                    symmetricEncryptionTask.cancel();
+                    Ultilities.showExceptionHandler(symmetricEncryptionTask);
                 });
+                symmetricEncryptionTask.setOnCancelled(event1 -> resetViewWhenDone());
+                new Thread(symmetricEncryptionTask).start();
+                btnStop.setOnAction(event1 -> resetViewWhenDone());
             } else if (rBtnDe.isSelected()) {
                 makeViewWhenStart();
                 final SymmetricDecryptionTask symmetricDecryptionTask = new SymmetricDecryptionTask(comboBoxAlgorithm.getSelectionModel().getSelectedItem(), comboBoxMode.getSelectionModel().getSelectedItem(), String.valueOf((int) sliderKeySize.getValue()), comboBoxPadding.getSelectionModel().getSelectedItem(), fileInput, fileOutput, key);
                 progressBar.progressProperty().bind(symmetricDecryptionTask.progressProperty());
-                symmetricDecryptionTask.addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED, event18 -> {
+                symmetricDecryptionTask.setOnSucceeded(event1 -> {
                     resetViewWhenDone();
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Done!");
@@ -332,12 +333,14 @@ public class SymmetricController {
                     alert.setContentText("Your file had been decrypted.");
                     alert.showAndWait();
                 });
-                Thread thread = new Thread(symmetricDecryptionTask);
-                thread.start();
-                btnStop.setOnAction(event1 -> {
+                symmetricDecryptionTask.setOnFailed(event1 -> {
                     resetViewWhenDone();
-                    symmetricDecryptionTask.cancel();
+                    Ultilities.showExceptionHandler(symmetricDecryptionTask);
                 });
+                symmetricDecryptionTask.setOnCancelled(event1 -> resetViewWhenDone());
+
+                new Thread(symmetricDecryptionTask).start();
+                btnStop.setOnAction(event1 -> symmetricDecryptionTask.cancel());
             } else {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Error");
