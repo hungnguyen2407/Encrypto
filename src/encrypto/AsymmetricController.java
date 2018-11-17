@@ -1,12 +1,8 @@
 package encrypto;
 
-import com.jfoenix.controls.*;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
@@ -22,17 +18,17 @@ public class AsymmetricController {
     @FXML
     private AnchorPane paneKeyPair, paneCrypto;
     @FXML
-    private JFXTextField tfPubKey, tfPriKey, tfKey;
+    private TextField tfPubKey, tfPriKey, tfKey;
     @FXML
-    private JFXButton btnStart, btnStop, btnPubKey, btnPriKey, btnCreate, btnKey;
+    private Button btnStart, btnStop, btnPubKey, btnPriKey, btnCreate, btnKey;
     @FXML
-    private JFXRadioButton rBtnEn, rBtnDe, rBtnKeyPair;
+    private RadioButton rBtnEn, rBtnDe, rBtnKeyPair;
     @FXML
-    private JFXProgressBar progressBar;
+    private ProgressBar progressBar;
     @FXML
-    private JFXComboBox<String> comboBoxAlgorithm, comboBoxMode, comboBoxPadding, comboBoxKeyPairAlgorithm;
+    private ComboBox<String> comboBoxAlgorithm, comboBoxMode, comboBoxPadding, comboBoxKeyPairAlgorithm;
     @FXML
-    private JFXTextArea taInput;
+    private TextArea taInput;
     @FXML
     private Label lblKey, lblInput;
     private File publicKey, privateKey;
@@ -451,7 +447,7 @@ public class AsymmetricController {
      *
      * @param btnCrypto : radio button
      */
-    private void radioBtnCryptoHandler(JFXRadioButton btnCrypto) {
+    private void radioBtnCryptoHandler(RadioButton btnCrypto) {
         if (btnCrypto.equals(rBtnKeyPair))
             rBtnKeyPair.setOnAction(event -> {
                 paneCrypto.setVisible(false);

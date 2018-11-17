@@ -1,9 +1,7 @@
 package encrypto;
 
-import com.jfoenix.controls.*;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 
 import java.io.File;
@@ -12,17 +10,17 @@ public class SymmetricController {
 
     public ToggleGroup cryptography;
     @FXML
-    private JFXTextField tfSrc, tfDes, tfKey;
+    private TextField tfSrc, tfDes, tfKey;
     @FXML
-    private JFXButton btnSrc, btnDes, btnKey, btnStart, btnStop;
+    private Button btnSrc, btnDes, btnKey, btnStart, btnStop;
     @FXML
-    private JFXRadioButton rBtnEn, rBtnDe;
+    private RadioButton rBtnEn, rBtnDe;
     @FXML
-    private JFXProgressBar progressBar;
+    private ProgressBar progressBar;
     @FXML
-    private JFXComboBox<String> comboBoxAlgorithm, comboBoxMode, comboBoxPadding;
+    private ComboBox<String> comboBoxAlgorithm, comboBoxMode, comboBoxPadding;
     @FXML
-    private JFXSlider sliderKeySize;
+    private Slider sliderKeySize;
 
     private File fileInput, fileOutput, key;
 
