@@ -12,7 +12,7 @@ import java.lang.reflect.Method;
 
 public class Main extends Application {
 
-    static final String APP_VERSION = "1.5.0-a1";
+    static final String APP_VERSION = "2.1.0-a1";
 
     public static void main(String[] args) {
         launch(args);
@@ -28,7 +28,7 @@ public class Main extends Application {
         primaryStage.setTitle("Encrypto");
 
         //set icon for Windows
-        primaryStage.getIcons().add(new javafx.scene.image.Image(Main.class.getResourceAsStream("icon.png")));
+        primaryStage.getIcons().add(new javafx.scene.image.Image(Main.class.getResourceAsStream("logo.png")));
 
         //set icon for macOS
         if ("Mac OS X".equals(System.getProperty("os.name"))) {
@@ -39,7 +39,7 @@ public class Main extends Application {
                 Class params[] = new Class[1];
                 params[0] = java.awt.Image.class;
                 Method setDockIconImage = Class.forName("com.apple.eawt.Application").getMethod("setDockIconImage", params);
-                setDockIconImage.invoke(application, SwingFXUtils.fromFXImage(new javafx.scene.image.Image(Main.class.getResourceAsStream("icon.png")), null));
+                setDockIconImage.invoke(application, SwingFXUtils.fromFXImage(new javafx.scene.image.Image(Main.class.getResourceAsStream("logo.png")), null));
             } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
                 e.printStackTrace();
             }

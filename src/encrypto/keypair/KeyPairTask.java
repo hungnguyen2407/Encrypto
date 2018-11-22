@@ -1,4 +1,4 @@
-package encrypto;
+package encrypto.keypair;
 
 import javafx.concurrent.Task;
 import javafx.scene.control.Alert;
@@ -36,6 +36,7 @@ public class KeyPairTask extends Task<File> {
     private void createKeyPair() {
         try {
             KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance(algorithm);
+            keyPairGenerator.initialize(1024);
             KeyPair keyPair = keyPairGenerator.generateKeyPair();
             FileOutputStream fileOutputStream;
             if (keyPair != null) {

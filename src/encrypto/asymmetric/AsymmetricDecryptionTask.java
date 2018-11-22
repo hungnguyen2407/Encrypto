@@ -1,4 +1,4 @@
-package encrypto;
+package encrypto.asymmetric;
 
 import javafx.concurrent.Task;
 
@@ -11,7 +11,7 @@ import java.security.PrivateKey;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.Objects;
 
-public class AsymmetricDecryptionTask extends Task<String> {
+public class AsymmetricDecryptionTask extends Task<byte[]> {
 
     private String algorithm, mode, padding;
     private byte[] cipherText;
@@ -26,8 +26,8 @@ public class AsymmetricDecryptionTask extends Task<String> {
     }
 
     @Override
-    protected String call() throws Exception {
-        return new String(Objects.requireNonNull(decryptHandler()), StandardCharsets.UTF_8);
+    protected byte[] call() throws Exception {
+        return decryptHandler();
     }
 
     private byte[] decryptHandler() throws Exception {

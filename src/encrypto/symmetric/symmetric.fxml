@@ -3,7 +3,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.*?>
-<AnchorPane prefHeight="568.0" prefWidth="535.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="encrypto.SymmetricController">
+<AnchorPane prefHeight="568.0" prefWidth="535.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="encrypto.symmetric.SymmetricController">
     <Label layoutX="150.0" layoutY="14.0" text="Symmetric Cryptography">
         <font>
             <Font size="21.0" />

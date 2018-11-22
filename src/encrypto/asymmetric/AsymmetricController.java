@@ -1,13 +1,22 @@
-package encrypto;
+package encrypto.asymmetric;
 
+import encrypto.Ultilities;
+import encrypto.keypair.KeyPairTask;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Bounds;
 import javafx.scene.control.*;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.SVGPath;
 import javafx.stage.FileChooser;
 
 import java.io.File;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 
 /**
  * This controller is handle for asymmetric tab
@@ -16,17 +25,15 @@ public class AsymmetricController {
 
     public ToggleGroup cryptography;
     @FXML
-    private AnchorPane paneKeyPair, paneCrypto;
+    private AnchorPane paneCrypto;
     @FXML
-    private TextField tfPubKey, tfPriKey, tfKey;
+    private TextField tfKey;
     @FXML
-    private Button btnStart, btnStop, btnPubKey, btnPriKey, btnCreate, btnKey;
+    private Button btnStart, btnStop, btnKey, btnPaste;
     @FXML
-    private RadioButton rBtnEn, rBtnDe, rBtnKeyPair;
+    private RadioButton rBtnEn, rBtnDe;
     @FXML
-    private ProgressBar progressBar;
-    @FXML
-    private ComboBox<String> comboBoxAlgorithm, comboBoxMode, comboBoxPadding, comboBoxKeyPairAlgorithm;
+    private ComboBox<String> comboBoxAlgorithm, comboBoxMode, comboBoxPadding;
     @FXML
     private TextArea taInput;
     @FXML
@@ -48,13 +55,10 @@ public class AsymmetricController {
          * ASYMMETRIC PANEL
          * This code below is handle for asymmetric cryptography features and create key pair
          */
-        radioBtnCryptoHandler(rBtnKeyPair);
 
         radioBtnCryptoHandler(rBtnEn);
 
         radioBtnCryptoHandler(rBtnDe);
-
-        paneKeyPairHandler();
 
         paneCryptoHandler();
     }
@@ -63,19 +67,15 @@ public class AsymmetricController {
      * Handler for pane crypto
      */
     private void paneCryptoHandler() {
-        cryptoRadioBtnEnHandler();
-
-        cryptoRadioBtnDeHandler();
-
         comboBoxAlgorithmHandler();
-
+        btnPasteHandler();
     }
 
     /**
      * Handler for algorithm combobox
      */
     private void comboBoxAlgorithmHandler() {
-        comboBoxAlgorithm.getItems().addAll("RSA", "DSA");
+        comboBoxAlgorithm.getItems().addAll("RSA");
         comboBoxAlgorithm.setOnAction(event -> {
             comboBoxModeHandler();
             comboBoxPaddingHandler();
@@ -93,11 +93,6 @@ public class AsymmetricController {
                 comboBoxMode.getItems().addAll("ECB");
                 comboBoxMode.setValue("ECB");
                 break;
-            case "DSA":
-                comboBoxMode.getItems().clear();
-                comboBoxMode.getItems().addAll("");
-                comboBoxMode.setValue("");
-                break;
         }
     }
 
@@ -111,11 +106,6 @@ public class AsymmetricController {
                 comboBoxPadding.getItems().clear();
                 comboBoxPadding.getItems().addAll("PKCS1Padding", "OAEPWithSHA-1AndMGF1Padding", "OAEPWithSHA-256AndMGF1Padding");
                 comboBoxPadding.setValue("PKCS1Padding");
-                break;
-            case "DSA":
-                comboBoxPadding.getItems().clear();
-                comboBoxPadding.getItems().addAll("");
-                comboBoxPadding.setValue("");
                 break;
         }
     }
@@ -132,8 +122,10 @@ public class AsymmetricController {
         taInputHandler();
     }
 
+
     private void taInputHandler() {
         taInput.clear();
+        taInput.setWrapText(true);
     }
 
     private void btnStartDeHandler() {
@@ -145,18 +137,15 @@ public class AsymmetricController {
                 alert.setContentText("Please fill all the required field.");
             } else {
                 disableCryptoPane();
-                final AsymmetricDecryptionTask asymmetricDecryptionTask = new AsymmetricDecryptionTask(comboBoxAlgorithm.getSelectionModel().getSelectedItem(), comboBoxMode.getSelectionModel().getSelectedItem(), comboBoxPadding.getSelectionModel().getSelectedItem(), privateKey, taInput.getText().getBytes());
-
+                final AsymmetricDecryptionTask asymmetricDecryptionTask = new AsymmetricDecryptionTask(comboBoxAlgorithm.getSelectionModel().getSelectedItem(), comboBoxMode.getSelectionModel().getSelectedItem(), comboBoxPadding.getSelectionModel().getSelectedItem(), privateKey, Base64.getDecoder().decode(taInput.getText()));
                 asymmetricDecryptionTask.setOnSucceeded(event1 -> {
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Done!");
                     alert.setHeaderText("Your cipher text had been decrypted. ");
                     VBox dialogPaneContent = new VBox();
-                    TextArea textArea = new TextArea(asymmetricDecryptionTask.getValue());
+                    TextArea textArea = new TextArea(new String(asymmetricDecryptionTask.getValue(), StandardCharsets.UTF_8));
                     textArea.setEditable(false);
-                    textArea.setScrollLeft(200);
-                    textArea.setPrefColumnCount(20);
-                    textArea.setPrefRowCount(10);
+                    textArea.setWrapText(true);
                     dialogPaneContent.getChildren().addAll(new Label("Plain text:"), textArea);
                     alert.getDialogPane().setContent(dialogPaneContent);
                     alert.setResizable(true);
@@ -168,6 +157,7 @@ public class AsymmetricController {
                     Ultilities.showExceptionHandler(asymmetricDecryptionTask);
                     resetCryptoPane();
                 });
+
                 asymmetricDecryptionTask.setOnCancelled(event1 -> resetCryptoPane());
 
                 new Thread(asymmetricDecryptionTask).start();
@@ -186,16 +176,17 @@ public class AsymmetricController {
             FileChooser fileChooser = new FileChooser();
             fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Private key (*.prikey)", "*.prikey"));
             privateKey = fileChooser.showOpenDialog(null);
-            if (!privateKey.exists()) {
+            if (privateKey == null) {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("Warning");
+                alert.setTitle("Private key is missing");
                 alert.setHeaderText(null);
-                alert.setContentText("Private key is not existed.");
+                alert.setContentText("Please choose a private key.");
+
             } else if (!privateKey.getName().endsWith(".prikey")) {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("Warning");
+                alert.setTitle("Wrong format");
                 alert.setHeaderText(null);
-                alert.setContentText("Private key is invalid.");
+                alert.setContentText("Please choose a file with private key extension.");
             } else {
                 tfKey.setText(privateKey.getAbsolutePath());
             }
@@ -206,12 +197,7 @@ public class AsymmetricController {
         tfKey.clear();
         tfKey.textProperty().addListener((observable, oldValue, newValue) -> {
             File file = new File(newValue);
-            if (!file.exists()) {
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("Warning");
-                alert.setHeaderText(null);
-                alert.setContentText("Private key is not existed.");
-            } else if (!file.getName().endsWith(".prikey")) {
+            if (!file.getName().endsWith(".prikey")) {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
                 alert.setTitle("Warning");
                 alert.setHeaderText(null);
@@ -254,12 +240,32 @@ public class AsymmetricController {
                     alert.setTitle("Done!");
                     alert.setHeaderText("Your plain text had been encrypted. ");
                     VBox dialogPaneContent = new VBox();
-                    TextArea textArea = new TextArea(asymmetricEncryptionTask.getValue());
+                    TextArea textArea = new TextArea(Base64.getEncoder().encodeToString(asymmetricEncryptionTask.getValue()));
                     textArea.setEditable(false);
-                    textArea.setScrollLeft(200);
-                    textArea.setPrefColumnCount(20);
-                    textArea.setPrefRowCount(10);
-                    dialogPaneContent.getChildren().addAll(new Label("Cipher text:"), textArea);
+                    textArea.setWrapText(true);
+                    Label lblCopy = new Label("");
+                    Button btnCopy = new Button("Copy");
+                    SVGPath svgPath = new SVGPath();
+                    svgPath.setContent("M320 448v40c0 13.255-10.745 24-24 24H24c-13.255 0-24-10.745-24-24V120c0-13.255 10.745-24 24-24h72v296c0 30.879 25.121 56 56 56h168zm0-344V0H152c-13.255 0-24 10.745-24 24v368c0 13.255 10.745 24 24 24h272c13.255 0 24-10.745 24-24V128H344c-13.2 0-24-10.8-24-24zm120.971-31.029L375.029 7.029A24 24 0 0 0 358.059 0H352v96h96v-6.059a24 24 0 0 0-7.029-16.97z");
+                    Bounds bounds = svgPath.getBoundsInParent();
+                    double scale = Math.min(20/bounds.getWidth(), 20 / bounds.getHeight());
+                    svgPath.setScaleX(scale);
+                    svgPath.setScaleY(scale);
+                    btnCopy.setGraphic(svgPath);
+                    btnCopy.setMaxSize(30, 30);
+                    btnCopy.setMinSize(30, 30);
+                    btnCopy.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+                    btnCopy.setOnAction(event2 -> {
+                        Clipboard clipboard = Clipboard.getSystemClipboard();
+                        ClipboardContent content = new ClipboardContent();
+                        content.putString(textArea.getText());
+                        if (clipboard.setContent(content)) {
+                            lblCopy.setText("  Copied!");
+                        }
+                    });
+                    FlowPane flowPane = new FlowPane();
+                    flowPane.getChildren().addAll(btnCopy, lblCopy);
+                    dialogPaneContent.getChildren().addAll(new Label("Cipher text:"), textArea, flowPane);
                     alert.getDialogPane().setContent(dialogPaneContent);
                     alert.setResizable(true);
                     alert.showAndWait();
@@ -281,14 +287,10 @@ public class AsymmetricController {
 
     private void disableCryptoPane() {
         paneCrypto.setDisable(true);
-        progressBar.setVisible(true);
-        progressBar.setDisable(false);
     }
 
     private void resetCryptoPane() {
         paneCrypto.setDisable(false);
-        progressBar.setVisible(false);
-        progressBar.setDisable(true);
     }
 
     private void lblInputEnHandler() {
@@ -300,18 +302,18 @@ public class AsymmetricController {
             FileChooser fileChooser = new FileChooser();
             fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Public key (*.pubkey)", "*.pubkey"));
             publicKey = fileChooser.showOpenDialog(null);
-            if (!publicKey.exists()) {
+            if (publicKey == null) {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("Warning");
+                alert.setTitle("Public key is missing");
                 alert.setHeaderText(null);
-                alert.setContentText("Public key is not existed.");
+                alert.setContentText("Please choose a public key.");
+
             } else if (!publicKey.getName().endsWith(".pubkey")) {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("Warning");
+                alert.setTitle("Wrong format");
                 alert.setHeaderText(null);
-                alert.setContentText("Public key is invalid.");
+                alert.setContentText("Please choose a file with public key extension.");
             } else {
-
                 tfKey.setText(publicKey.getAbsolutePath());
             }
         });
@@ -321,12 +323,7 @@ public class AsymmetricController {
         tfKey.clear();
         tfKey.textProperty().addListener((observable, oldValue, newValue) -> {
             File file = new File(newValue);
-            if (!file.exists()) {
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("Warning");
-                alert.setHeaderText(null);
-                alert.setContentText("Public key is not existed.");
-            } else if (!file.getName().endsWith(".pubkey")) {
+            if (!file.getName().endsWith(".pubkey")) {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
                 alert.setTitle("Warning");
                 alert.setHeaderText(null);
@@ -341,134 +338,38 @@ public class AsymmetricController {
         lblKey.setText("Public key");
     }
 
-    /**
-     * Handler for pane key pair
-     */
-    private void paneKeyPairHandler() {
-        keyPairComboBoxAlgorithmHandler();
-
-        keyPairPubKeyHandler();
-
-        keyPairPriKeyHandler();
-
-        keyPairBtnCreateHandler();
-    }
-
-    /**
-     * Handler for create key pair button
-     */
-    private void keyPairBtnCreateHandler() {
-        btnCreate.setOnAction(event -> {
-            if (comboBoxKeyPairAlgorithm.getSelectionModel().getSelectedItem() == null | "".equals(comboBoxKeyPairAlgorithm.getSelectionModel().getSelectedItem())) {
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("Error");
-                alert.setHeaderText(null);
-                alert.setContentText("Algorithm is missing.");
-                alert.showAndWait();
-            } else if (tfPubKey.getText() == null | "".equals(tfPubKey.getText())) {
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("Public key location is missing");
-                alert.setHeaderText(null);
-                alert.setContentText("Please choose a location for save the public key.");
-                alert.showAndWait();
-            } else if (tfPriKey.getText() == null | "".equals(tfPriKey.getText())) {
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("Private key location is missing");
-                alert.setHeaderText(null);
-                alert.setContentText("Please choose a location for save the private key.");
-                alert.showAndWait();
-            } else {
-                KeyPairTask keyPairTask = new KeyPairTask(comboBoxKeyPairAlgorithm.getSelectionModel().getSelectedItem(), publicKey, privateKey);
-                keyPairTask.addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED, event1 -> {
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Done!");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Create key pair success.");
-                    alert.showAndWait();
-                });
-                new Thread(keyPairTask).start();
-            }
-        });
-    }
-
-    /**
-     * Handler for key pair combobox algorithm
-     */
-    private void keyPairComboBoxAlgorithmHandler() {
-        comboBoxKeyPairAlgorithm.getItems().addAll("RSA", "DSA");
-    }
-
-    /**
-     * Handler for choose location output public key
-     */
-    private void keyPairPubKeyHandler() {
-        btnPubKey.setOnAction(event -> {
-            FileChooser fileChooser = new FileChooser();
-            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Public key file (*.pubkey)", "*.pubkey"));
-            publicKey = fileChooser.showSaveDialog(null);
-            if (publicKey != null) {
-                if (!publicKey.getName().endsWith(".pubkey"))
-                    publicKey = new File(publicKey.getAbsolutePath() + ".pubkey");
-                tfPubKey.setText(publicKey.getAbsolutePath());
-            }
-        });
-        tfPubKey.setOnAction(event -> {
-            publicKey = new File(tfPubKey.getText());
-            if (!publicKey.getName().endsWith(".pubkey")) {
-                publicKey = new File(publicKey.getAbsolutePath() + ".pubkey");
-            }
-        });
-    }
-
-    /**
-     * Handler for choose location output private key
-     */
-    private void keyPairPriKeyHandler() {
-        btnPriKey.setOnAction(event -> {
-            FileChooser fileChooser = new FileChooser();
-            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Private key file (*.prikey)", "*.prikey"));
-            privateKey = fileChooser.showSaveDialog(null);
-            if (privateKey != null) {
-                if (!privateKey.getName().endsWith(".prikey"))
-                    privateKey = new File(privateKey.getName() + ".prikey");
-                tfPriKey.setText(privateKey.getAbsolutePath());
-            }
-        });
-        tfPriKey.setOnAction(event -> {
-            privateKey = new File(tfPriKey.getText());
-            if (!privateKey.getName().endsWith(".prikey")) {
-                privateKey = new File(publicKey.getAbsolutePath() + ".prikey");
-            }
+    private void btnPasteHandler() {
+        SVGPath svgPath = new SVGPath();
+        svgPath.setContent("M128 184c0-30.879 25.122-56 56-56h136V56c0-13.255-10.745-24-24-24h-80.61C204.306 12.89 183.637 0 160 0s-44.306 12.89-55.39 32H24C10.745 32 0 42.745 0 56v336c0 13.255 10.745 24 24 24h104V184zm32-144c13.255 0 24 10.745 24 24s-10.745 24-24 24-24-10.745-24-24 10.745-24 24-24zm184 248h104v200c0 13.255-10.745 24-24 24H184c-13.255 0-24-10.745-24-24V184c0-13.255 10.745-24 24-24h136v104c0 13.2 10.8 24 24 24zm104-38.059V256h-96v-96h6.059a24 24 0 0 1 16.97 7.029l65.941 65.941a24.002 24.002 0 0 1 7.03 16.971z");
+        Bounds bounds = svgPath.getBoundsInParent();
+        double scale = Math.min(20/bounds.getWidth(), 20 / bounds.getHeight());
+        svgPath.setScaleX(scale);
+        svgPath.setScaleY(scale);
+        btnPaste.setGraphic(svgPath);
+        btnPaste.setMaxSize(30, 30);
+        btnPaste.setMinSize(30, 30);
+        btnPaste.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+        btnPaste.setOnAction(event -> {
+            taInput.setText(Clipboard.getSystemClipboard().getString());
         });
     }
 
     /**
      * Handler for radio button crypto mode
      *
-     * @param btnCrypto : radio button
+     * @param rBtn : radio button
      */
-    private void radioBtnCryptoHandler(RadioButton btnCrypto) {
-        if (btnCrypto.equals(rBtnKeyPair))
-            rBtnKeyPair.setOnAction(event -> {
-                paneCrypto.setVisible(false);
-                paneCrypto.setDisable(true);
-                paneKeyPair.setVisible(true);
-                paneKeyPair.setDisable(false);
-            });
-        else if (btnCrypto.equals(rBtnEn)) {
+    private void radioBtnCryptoHandler(RadioButton rBtn) {
+        if (rBtn.equals(rBtnEn)) {
             rBtnEn.setOnAction(event -> {
                 paneCrypto.setVisible(true);
                 paneCrypto.setDisable(false);
-                paneKeyPair.setVisible(false);
-                paneKeyPair.setDisable(true);
                 cryptoRadioBtnEnHandler();
             });
-        } else if (btnCrypto.equals(rBtnDe)) {
+        } else if (rBtn.equals(rBtnDe)) {
             rBtnDe.setOnAction(event -> {
                 paneCrypto.setVisible(true);
                 paneCrypto.setDisable(false);
-                paneKeyPair.setVisible(false);
-                paneKeyPair.setDisable(true);
                 cryptoRadioBtnDeHandler();
             });
         }

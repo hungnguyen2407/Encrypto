@@ -1,4 +1,4 @@
-package encrypto;
+package encrypto.asymmetric;
 
 import javafx.concurrent.Task;
 
@@ -10,7 +10,7 @@ import java.security.PublicKey;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Objects;
 
-public class AsymmetricEncryptionTask extends Task<String> {
+public class AsymmetricEncryptionTask extends Task<byte[]> {
 
     private String algorithm, mode, padding;
     private byte[] plainText;
@@ -25,8 +25,8 @@ public class AsymmetricEncryptionTask extends Task<String> {
     }
 
     @Override
-    protected String call() throws Exception {
-        return new String(Objects.requireNonNull(encryptHandler()));
+    protected byte[] call() throws Exception {
+        return encryptHandler();
     }
 
     private byte[] encryptHandler() throws Exception {

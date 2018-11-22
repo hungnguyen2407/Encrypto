@@ -1,5 +1,6 @@
-package encrypto;
+package encrypto.symmetric;
 
+import encrypto.Ultilities;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.FileChooser;

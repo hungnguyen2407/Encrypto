@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1" prefHeight="634.0" prefWidth="530.0"
-            xmlns="http://javafx.com/javafx/8.0.172-ea" fx:controller="encrypto.Controller">
-    <MenuBar prefHeight="25.0" prefWidth="600.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-             AnchorPane.topAnchor="0.0">
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="634.0" prefWidth="530.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="encrypto.Controller">
+    <MenuBar prefHeight="30.0" prefWidth="600.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <Menu mnemonicParsing="false" text="File">
             <MenuItem id="mniExit" mnemonicParsing="false" onAction="#closeApp" text="Exit" />
         </Menu>
@@ -13,13 +16,18 @@
             <MenuItem mnemonicParsing="false" onAction="#about" text="About" />
         </Menu>
     </MenuBar>
-    <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0"
-             AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="25.0">
+    <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0">
         <Tab fx:id="tabSymmetric" text="Symmetric">
-            <fx:include source="symmetric.fxml"/>
+            <fx:include source="symmetric/symmetric.fxml" />
         </Tab>
         <Tab text="Asymmetric">
-            <fx:include source="asymmetric.fxml"/>
+            <fx:include source="asymmetric/asymmetric.fxml" />
+        </Tab>
+        <Tab text="Digital Signature">
+            <fx:include source="digitalsignature/digitalSignature.fxml" />
+        </Tab>
+        <Tab text="Key Pair">
+            <fx:include source="keypair/keypair.fxml" />
         </Tab>
     </TabPane>
 </AnchorPane>

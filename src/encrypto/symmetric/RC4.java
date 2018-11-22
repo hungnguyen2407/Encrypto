@@ -1,4 +1,4 @@
-package encrypto;
+package encrypto.symmetric;
 
 public class RC4 {
     private final byte[] S = new byte[256];
