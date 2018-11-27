@@ -22,10 +22,10 @@ public class DigitalSignatureController {
     @FXML
     private RadioButton rBtnSign, rBtnVerify;
     @FXML
-    private ComboBox<String> comboBoxAlgorithm, comboBoxMode, comboBoxPadding;
+    private ComboBox<String> comboBoxAlgorithm;
     @FXML
-    private Label lblKey, lblSrc, lblSign;
-    private File publicKey, privateKey, key, sign, src;
+    private Label lblKey;
+    private File key, sign, src;
 
     /**
      * Constructor
@@ -73,6 +73,69 @@ public class DigitalSignatureController {
         tfSign.clear();
         key = null;
         lblKey.setText("Public key");
+        btnSrc.setOnAction(event -> {
+            FileChooser fileChooser = new FileChooser();
+            src = fileChooser.showOpenDialog(null);
+            if (src == null) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Warning");
+                alert.setHeaderText(null);
+                alert.setContentText("Please choose a source file to sign.");
+                alert.showAndWait();
+            } else if (!src.exists()) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Warning");
+                alert.setHeaderText(null);
+                alert.setContentText("Access dined. Please check permission of the file.");
+                alert.showAndWait();
+            } else {
+                tfSrc.setText(src.getAbsolutePath());
+            }
+        });
+
+        btnSign.setOnAction(event -> {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Sign file (*.sign)", "*.sign"));
+            sign = fileChooser.showOpenDialog(null);
+            if (sign == null) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Warning");
+                alert.setHeaderText(null);
+                alert.setContentText("Please choose a sign file to verify.");
+                alert.showAndWait();
+            } else if (!sign.exists()) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Warning");
+                alert.setHeaderText(null);
+                alert.setContentText("Access dined. Please check permission of sign file.");
+                alert.showAndWait();
+            } else {
+                tfSrc.setText(sign.getAbsolutePath());
+            }
+        });
+
+        btnKey.setOnAction(event -> {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Public key (*.pubkey)", "*.pubkey"));
+            key = fileChooser.showOpenDialog(null);
+            if (key == null) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Warning");
+                alert.setHeaderText(null);
+                alert.setContentText("Please choose a public key.");
+                alert.showAndWait();
+            } else if (!key.exists()) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Warning");
+                alert.setHeaderText(null);
+                alert.setContentText("Access dined. Please check permission of public key file.");
+                alert.showAndWait();
+            } else {
+                tfKey.setText(key.getAbsolutePath());
+            }
+        });
+
+        //TODO btnStart
     }
 
     /**
@@ -84,6 +147,105 @@ public class DigitalSignatureController {
         tfSign.clear();
         key = null;
         lblKey.setText("Private key");
+        btnSrc.setOnAction(event -> {
+            FileChooser fileChooser = new FileChooser();
+            src = fileChooser.showOpenDialog(null);
+            if (src == null) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Warning");
+                alert.setHeaderText(null);
+                alert.setContentText("Please choose a source file to sign.");
+                alert.showAndWait();
+            } else if (!src.exists()) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Warning");
+                alert.setHeaderText(null);
+                alert.setContentText("Access dined. Please check permission of the file.");
+                alert.showAndWait();
+            } else {
+                tfSrc.setText(src.getAbsolutePath());
+            }
+        });
+
+        btnSign.setOnAction(event -> {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Sign file (*.sign)", "*.sign"));
+            sign = fileChooser.showSaveDialog(null);
+            if (!sign.getName().endsWith(".sign")) {
+                sign.renameTo(new File(sign.getName() + ".sign"));
+            }
+            tfSign.setText(sign.getAbsolutePath());
+        });
+
+        btnKey.setOnAction(event -> {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Private key (*.prikey)", "*.prikey"));
+            key = fileChooser.showOpenDialog(null);
+            if (key == null) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Warning");
+                alert.setHeaderText(null);
+                alert.setContentText("Please choose a private key.");
+                alert.showAndWait();
+            } else if (!key.exists()) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Warning");
+                alert.setHeaderText(null);
+                alert.setContentText("Access dined. Please check permission of private key file.");
+                alert.showAndWait();
+            } else {
+                tfKey.setText(key.getAbsolutePath());
+            }
+        });
+
+        btnStart.setOnAction(event -> {
+            paneDI.setDisable(true);
+            rBtnSign.setDisable(true);
+            rBtnVerify.setDisable(true);
+            btnStart.setVisible(false);
+            SignTask signTask = new SignTask(src, key, sign, comboBoxAlgorithm.getSelectionModel().getSelectedItem());
+            signTask.setOnSucceeded(event1 -> {
+                paneDI.setDisable(false);
+                rBtnSign.setDisable(false);
+                rBtnVerify.setDisable(false);
+                btnStop.setVisible(false);
+                btnStop.setDisable(true);
+                btnStart.setVisible(true);
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Success!");
+                alert.setHeaderText(null);
+                alert.setContentText("Sign file success.");
+                alert.showAndWait();
+            });
+
+            signTask.setOnFailed(event1 -> {
+                paneDI.setDisable(false);
+                rBtnSign.setDisable(false);
+                rBtnVerify.setDisable(false);
+                btnStop.setVisible(false);
+                btnStop.setDisable(true);
+                btnStart.setVisible(true);
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Failed!");
+                alert.setHeaderText(null);
+                alert.setContentText("Sign file failed.");
+                alert.showAndWait();
+            });
+
+            btnStop.setVisible(true);
+            btnStop.setDisable(false);
+            btnStop.setOnAction(event1 -> {
+                signTask.cancel();
+                paneDI.setDisable(false);
+                rBtnSign.setDisable(false);
+                rBtnVerify.setDisable(false);
+                btnStop.setVisible(false);
+                btnStop.setDisable(true);
+                btnStart.setVisible(true);
+            });
+
+            new Thread(signTask).start();
+        });
     }
 
     /**
