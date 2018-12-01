@@ -1,5 +1,6 @@
 package encrypto.digitalsignature;
 
+import encrypto.Ultilities;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
@@ -110,7 +111,7 @@ public class DigitalSignatureController {
                 alert.setContentText("Access dined. Please check permission of sign file.");
                 alert.showAndWait();
             } else {
-                tfSrc.setText(sign.getAbsolutePath());
+                tfSign.setText(sign.getAbsolutePath());
             }
         });
 
@@ -134,7 +135,60 @@ public class DigitalSignatureController {
                 tfKey.setText(key.getAbsolutePath());
             }
         });
+        btnStart.setOnAction(event -> {
+            paneDI.setDisable(true);
+            rBtnSign.setDisable(true);
+            rBtnVerify.setDisable(true);
+            btnStart.setVisible(false);
+            VerifyTask verifyTask = new VerifyTask(src, key, sign, comboBoxAlgorithm.getSelectionModel().getSelectedItem());
+            verifyTask.setOnSucceeded(event1 -> {
+                paneDI.setDisable(false);
+                rBtnSign.setDisable(false);
+                rBtnVerify.setDisable(false);
+                btnStop.setVisible(false);
+                btnStop.setDisable(true);
+                btnStart.setVisible(true);
+                if(verifyTask.getValue())
+                {
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Success!");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Verify success.");
+                    alert.showAndWait();
+                }
+                else{
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Failed!");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Verify failed.");
+                    alert.showAndWait();
+                }
+            });
 
+            verifyTask.setOnFailed(event1 -> {
+                paneDI.setDisable(false);
+                rBtnSign.setDisable(false);
+                rBtnVerify.setDisable(false);
+                btnStop.setVisible(false);
+                btnStop.setDisable(true);
+                btnStart.setVisible(true);
+                Ultilities.showExceptionHandler(verifyTask);
+            });
+
+            btnStop.setVisible(true);
+            btnStop.setDisable(false);
+            btnStop.setOnAction(event1 -> {
+                verifyTask.cancel();
+                paneDI.setDisable(false);
+                rBtnSign.setDisable(false);
+                rBtnVerify.setDisable(false);
+                btnStop.setVisible(false);
+                btnStop.setDisable(true);
+                btnStart.setVisible(true);
+            });
+
+            new Thread(verifyTask).start();
+        });
         //TODO btnStart
     }
 
@@ -225,11 +279,7 @@ public class DigitalSignatureController {
                 btnStop.setVisible(false);
                 btnStop.setDisable(true);
                 btnStart.setVisible(true);
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Failed!");
-                alert.setHeaderText(null);
-                alert.setContentText("Sign file failed.");
-                alert.showAndWait();
+                Ultilities.showExceptionHandler(signTask);
             });
 
             btnStop.setVisible(true);
