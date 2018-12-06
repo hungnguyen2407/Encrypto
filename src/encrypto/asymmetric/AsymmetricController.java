@@ -1,13 +1,11 @@
 package encrypto.asymmetric;
 
 import encrypto.Ultilities;
-import encrypto.keypair.KeyPairTask;
-import javafx.concurrent.WorkerStateEvent;
+import encrypto.ui.CopyButton;
 import javafx.fxml.FXML;
 import javafx.geometry.Bounds;
 import javafx.scene.control.*;
 import javafx.scene.input.Clipboard;
-import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
@@ -244,25 +242,7 @@ public class AsymmetricController {
                     textArea.setEditable(false);
                     textArea.setWrapText(true);
                     Label lblCopy = new Label("");
-                    Button btnCopy = new Button("Copy");
-                    SVGPath svgPath = new SVGPath();
-                    svgPath.setContent("M320 448v40c0 13.255-10.745 24-24 24H24c-13.255 0-24-10.745-24-24V120c0-13.255 10.745-24 24-24h72v296c0 30.879 25.121 56 56 56h168zm0-344V0H152c-13.255 0-24 10.745-24 24v368c0 13.255 10.745 24 24 24h272c13.255 0 24-10.745 24-24V128H344c-13.2 0-24-10.8-24-24zm120.971-31.029L375.029 7.029A24 24 0 0 0 358.059 0H352v96h96v-6.059a24 24 0 0 0-7.029-16.97z");
-                    Bounds bounds = svgPath.getBoundsInParent();
-                    double scale = Math.min(20/bounds.getWidth(), 20 / bounds.getHeight());
-                    svgPath.setScaleX(scale);
-                    svgPath.setScaleY(scale);
-                    btnCopy.setGraphic(svgPath);
-                    btnCopy.setMaxSize(30, 30);
-                    btnCopy.setMinSize(30, 30);
-                    btnCopy.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-                    btnCopy.setOnAction(event2 -> {
-                        Clipboard clipboard = Clipboard.getSystemClipboard();
-                        ClipboardContent content = new ClipboardContent();
-                        content.putString(textArea.getText());
-                        if (clipboard.setContent(content)) {
-                            lblCopy.setText("  Copied!");
-                        }
-                    });
+                    Button btnCopy = new CopyButton(textArea, lblCopy);
                     FlowPane flowPane = new FlowPane();
                     flowPane.getChildren().addAll(btnCopy, lblCopy);
                     dialogPaneContent.getChildren().addAll(new Label("Cipher text:"), textArea, flowPane);

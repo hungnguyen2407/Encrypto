@@ -4,6 +4,8 @@ import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Tab;
 
+import java.util.Date;
+
 public class Controller {
 
     public Tab tabSymmetric;
@@ -21,7 +23,7 @@ public class Controller {
         Alert dialog = new Alert(Alert.AlertType.INFORMATION);
         dialog.setTitle("About");
         dialog.setHeaderText("Encrypto v" + Main.APP_VERSION);
-        dialog.setContentText("Copyright © 2018 Nguyen Hoang Hung.");
+        dialog.setContentText("Copyright © " + (new Date().getYear() + 1900) + " Nguyen Hoang Hung.");
         dialog.showAndWait();
     }
 }

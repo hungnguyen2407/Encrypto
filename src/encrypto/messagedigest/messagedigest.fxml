@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" prefHeight="553.0" prefWidth="534.0"
+            xmlns="http://javafx.com/javafx/8.0.172-ea" fx:controller="encrypto.messagedigest.MessageDigestController">
+    <Label layoutX="184.0" layoutY="14.0" prefHeight="27.0" prefWidth="166.0" text="Message Digest"
+           AnchorPane.leftAnchor="184.0" AnchorPane.rightAnchor="184.0" AnchorPane.topAnchor="14.0">
+        <font>
+            <Font size="21.0"/>
+        </font>
+    </Label>
+    <Button fx:id="btnStop" disable="true" layoutX="213.0" layoutY="480.0" mnemonicParsing="false" prefHeight="47.0"
+            prefWidth="109.0" text="Stop" visible="false"/>
+    <Button fx:id="btnStart" layoutX="213.0" layoutY="480.0" mnemonicParsing="false" prefHeight="47.0" prefWidth="109.0"
+            text="Start"/>
+    <Accordion layoutX="136.0" layoutY="356.0"/>
+    <AnchorPane fx:id="paneInput" disable="true" layoutY="92.0" prefHeight="381.0" prefWidth="534.0">
+        <ComboBox fx:id="comboBoxAlgorithm" layoutX="103.0" layoutY="101.0" prefHeight="27.0" prefWidth="302.0"/>
+        <Separator layoutX="128.0" layoutY="84.0" prefHeight="3.0" prefWidth="362.0"/>
+        <Separator layoutX="41.0" layoutY="145.0" prefHeight="3.0" prefWidth="450.0"/>
+        <Separator layoutX="489.0" layoutY="84.0" orientation="VERTICAL" prefHeight="60.0"/>
+        <Separator layoutX="39.0" layoutY="84.0" orientation="VERTICAL" prefHeight="60.0"/>
+        <Label layoutX="45.0" layoutY="74.0" text="Algorithm">
+            <font>
+                <Font size="16.0"/>
+            </font>
+        </Label>
+        <TextArea fx:id="taInput" layoutX="42.0" layoutY="172.0" prefHeight="132.0" prefWidth="450.0"/>
+        <Button fx:id="btnFile" layoutX="116.0" layoutY="332.0" mnemonicParsing="false" prefHeight="36.0"
+                prefWidth="302.0" text="Choose file" AnchorPane.leftAnchor="116.0" AnchorPane.rightAnchor="116.0"/>
+        <Button fx:id="btnPaste" layoutX="444.0" layoutY="267.0" mnemonicParsing="false" text="Button"/>
+    </AnchorPane>
+    <ProgressIndicator fx:id="progressIndicator" layoutX="335.0" layoutY="481.0" progress="0.0" visible="false"/>
+    <RadioButton fx:id="rBtnVerify" layoutX="305.0" layoutY="55.0" mnemonicParsing="false" text="Verify">
+        <toggleGroup>
+            <ToggleGroup fx:id="rBtn"/>
+        </toggleGroup>
+    </RadioButton>
+    <RadioButton fx:id="rBtnHash" layoutX="156.0" layoutY="55.0" mnemonicParsing="false" text="Hash"
+                 toggleGroup="$rBtn"/>
+</AnchorPane>
