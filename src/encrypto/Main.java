@@ -12,7 +12,7 @@ import java.lang.reflect.Method;
 
 public class Main extends Application {
 
-    static final String APP_VERSION = "1.6";
+    static final String APP_VERSION = "1.6.1";
 
     public static void main(String[] args) {
         launch(args);
@@ -36,7 +36,7 @@ public class Main extends Application {
                 Class macOSApplication = Class.forName("com.apple.eawt.Application");
                 Method getApplication = Class.forName("com.apple.eawt.Application").getMethod("getApplication");
                 Object application = getApplication.invoke(macOSApplication);
-                Class params[] = new Class[1];
+                Class[] params = new Class[1];
                 params[0] = java.awt.Image.class;
                 Method setDockIconImage = Class.forName("com.apple.eawt.Application").getMethod("setDockIconImage", params);
                 setDockIconImage.invoke(application, SwingFXUtils.fromFXImage(new javafx.scene.image.Image(Main.class.getResourceAsStream("logo.png")), null));

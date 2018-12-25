@@ -1,6 +1,8 @@
 package encrypto.symmetric;
 
 import encrypto.Ultilities;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.FileChooser;
@@ -22,6 +24,8 @@ public class SymmetricController {
     private ComboBox<String> comboBoxAlgorithm, comboBoxMode, comboBoxPadding;
     @FXML
     private Slider sliderKeySize;
+    @FXML
+    private Label keySizeValue;
 
     private File fileInput, fileOutput, key;
 
@@ -47,6 +51,13 @@ public class SymmetricController {
                 "AES", "DES", "DESede", "Blowfish", "RC2", "RC4", "RC5"
         );
 
+        sliderKeySize.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                keySizeValue.setText((int) sliderKeySize.getValue() + "");
+            }
+        });
+
         //Handler for choose algorithm, mode, key size, padding
         comboBoxAlgorithm.setOnAction(event -> {
             if (null != comboBoxAlgorithm.getSelectionModel().getSelectedItem())
@@ -68,7 +79,6 @@ public class SymmetricController {
                     case "DES":
                         comboBoxMode.setDisable(false);
                         comboBoxMode.getItems().clear();
-                        sliderKeySize.setDisable(false);
                         comboBoxPadding.getItems().clear();
                         comboBoxMode.getItems().addAll("CBC", "ECB", "PCBC", "CFB", "OFB", "CTR");
                         sliderKeySize.setMin(56);
@@ -78,6 +88,7 @@ public class SymmetricController {
                         sliderKeySize.setMinorTickCount(0);
                         sliderKeySize.setValue(56);
                         sliderKeySize.setSnapToTicks(true);
+                        sliderKeySize.setDisable(true);
                         break;
                     case "DESede":
                         comboBoxMode.setDisable(false);
@@ -102,9 +113,10 @@ public class SymmetricController {
                         sliderKeySize.setMin(0);
                         sliderKeySize.setMax(2040);
                         sliderKeySize.setBlockIncrement(1);
-                        sliderKeySize.setMajorTickUnit(2046);
+                        sliderKeySize.setMajorTickUnit(2040);
                         sliderKeySize.setMinorTickCount(0);
                         sliderKeySize.setValue(1024);
+                        sliderKeySize.setSnapToTicks(false);
                         break;
                     case "RC2":
                         comboBoxMode.setDisable(false);
@@ -118,6 +130,7 @@ public class SymmetricController {
                         sliderKeySize.setMajorTickUnit(1024);
                         sliderKeySize.setMinorTickCount(40);
                         sliderKeySize.setValue(512);
+                        sliderKeySize.setSnapToTicks(false);
                         break;
                     case "RC4":
                         comboBoxMode.setDisable(true);
@@ -125,12 +138,13 @@ public class SymmetricController {
                         sliderKeySize.setDisable(false);
                         comboBoxPadding.setDisable(true);
                         comboBoxPadding.getItems().clear();
-                        sliderKeySize.setMin(1);
-                        sliderKeySize.setMax(256);
+                        sliderKeySize.setMin(40);
+                        sliderKeySize.setMax(2048);
                         sliderKeySize.setBlockIncrement(1);
                         sliderKeySize.setMajorTickUnit(256);
-                        sliderKeySize.setMinorTickCount(1);
-                        sliderKeySize.setValue(128);
+                        sliderKeySize.setMinorTickCount(40);
+                        sliderKeySize.setValue(40);
+                        sliderKeySize.setSnapToTicks(false);
                         break;
                     case "RC5":
                         comboBoxMode.setDisable(true);
@@ -138,12 +152,13 @@ public class SymmetricController {
                         sliderKeySize.setDisable(false);
                         comboBoxPadding.setDisable(true);
                         comboBoxPadding.getItems().clear();
-                        sliderKeySize.setMin(1);
-                        sliderKeySize.setMax(255);
+                        sliderKeySize.setMin(0);
+                        sliderKeySize.setMax(2048);
                         sliderKeySize.setBlockIncrement(1);
                         sliderKeySize.setMajorTickUnit(255);
                         sliderKeySize.setMinorTickCount(1);
                         sliderKeySize.setValue(128);
+                        sliderKeySize.setSnapToTicks(false);
                         break;
                 }
         });
