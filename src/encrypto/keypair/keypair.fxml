@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 <AnchorPane xmlns:fx="http://javafx.com/fxml/1" prefHeight="553.0" prefWidth="534.0"
-            xmlns="http://javafx.com/javafx/10.0.1" fx:controller="encrypto.keypair.KeyPairController">
+            xmlns="http://javafx.com/javafx/8.0.172-ea" fx:controller="encrypto.keypair.KeyPairController">
     <AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:id="paneKeyPair" layoutX="-1.0" layoutY="54.0" prefHeight="423.0"
                 prefWidth="534.0" xmlns="http://javafx.com/javafx/8.0.172-ea">
         <Button fx:id="btnPubKey" layoutX="442.0" layoutY="204.0" mnemonicParsing="false" text="Choose"
@@ -34,7 +34,8 @@
                 <Font size="14.0" />
             </font>
         </Button>
-        <Label layoutX="56.0" layoutY="65.0" text="Key size" AnchorPane.leftAnchor="56.0" AnchorPane.topAnchor="65.0">
+        <Label layoutX="36.0" layoutY="65.0" text="Key size (bits)" AnchorPane.leftAnchor="36.0"
+               AnchorPane.topAnchor="65.0">
          <font>
             <Font size="14.0" />
          </font>

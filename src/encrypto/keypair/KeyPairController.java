@@ -3,8 +3,10 @@ package encrypto.keypair;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
 import java.io.File;
 
@@ -65,29 +67,33 @@ public class KeyPairController {
         btnCreate.setOnAction(event -> {
             if (comboBoxKeyPairAlgorithm.getSelectionModel().getSelectedItem() == null | "".equals(comboBoxKeyPairAlgorithm.getSelectionModel().getSelectedItem())) {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
+                Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+                stage.getIcons().add(new Image(this.getClass().getResource("/com/sun/javafx/scene/control/skin/modena/dialog-warning.png").toString()));
                 alert.setTitle("Error");
-                alert.setHeaderText(null);
-                alert.setContentText("Algorithm is missing.");
+                alert.setHeaderText("Algorithm is missing.");
                 alert.showAndWait();
             } else if (tfPubKey.getText() == null | "".equals(tfPubKey.getText())) {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
+                Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+                stage.getIcons().add(new Image(this.getClass().getResource("/com/sun/javafx/scene/control/skin/modena/dialog-warning.png").toString()));
                 alert.setTitle("Public key location is missing");
-                alert.setHeaderText(null);
-                alert.setContentText("Please choose a location for save the public key.");
+                alert.setHeaderText("Please choose a location for save the public key.");
                 alert.showAndWait();
             } else if (tfPriKey.getText() == null | "".equals(tfPriKey.getText())) {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
+                Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+                stage.getIcons().add(new Image(this.getClass().getResource("/com/sun/javafx/scene/control/skin/modena/dialog-warning.png").toString()));
                 alert.setTitle("Private key location is missing");
-                alert.setHeaderText(null);
-                alert.setContentText("Please choose a location for save the private key.");
+                alert.setHeaderText("Please choose a location for save the private key.");
                 alert.showAndWait();
             } else {
                 KeyPairTask keyPairTask = new KeyPairTask(comboBoxKeyPairAlgorithm.getSelectionModel().getSelectedItem(), publicKey, privateKey);
                 keyPairTask.addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED, event1 -> {
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+                    stage.getIcons().add(new Image(this.getClass().getResource("/com/sun/javafx/scene/control/skin/modena/dialog-information.png").toString()));
                     alert.setTitle("Done!");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Create key pair success.");
+                    alert.setHeaderText("Create key pair success.");
                     alert.showAndWait();
                 });
                 new Thread(keyPairTask).start();

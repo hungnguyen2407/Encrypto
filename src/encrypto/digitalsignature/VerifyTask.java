@@ -46,7 +46,7 @@ public class VerifyTask extends Task<Boolean> {
 
         X509EncodedKeySpec pubKeySpec = new X509EncodedKeySpec(keyBytes);
         PublicKey publicKey = keyFactory.generatePublic(pubKeySpec);
-        Signature sign = Signature.getInstance(algorithm, "SUN");
+        Signature sign = Signature.getInstance(algorithm);
         sign.initVerify(publicKey);
         fis = new FileInputStream(src);
         byte[] bytes = new byte[1024];

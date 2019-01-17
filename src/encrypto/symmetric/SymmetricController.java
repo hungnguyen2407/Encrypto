@@ -5,7 +5,9 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
 import java.io.File;
 
@@ -300,21 +302,24 @@ public class SymmetricController {
         btnStart.setOnAction(event -> {
             if (tfSrc.getText() == null | "".equals(tfSrc.getText()) || !fileInput.exists()) {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
+                Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+                stage.getIcons().add(new Image(this.getClass().getResource("/com/sun/javafx/scene/control/skin/modena/dialog-warning.png").toString()));
                 alert.setTitle("File is missing");
-                alert.setHeaderText(null);
-                alert.setContentText("Please choose a file.");
+                alert.setHeaderText("Please choose a file.");
                 alert.showAndWait();
             } else if (tfDes.getText() == null | "".equals(tfDes.getText())) {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
+                Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+                stage.getIcons().add(new Image(this.getClass().getResource("/com/sun/javafx/scene/control/skin/modena/dialog-warning.png").toString()));
                 alert.setTitle("Save file location is missing");
-                alert.setHeaderText(null);
-                alert.setContentText("Please choose a location to save the file.");
+                alert.setHeaderText("Please choose a location to save the file.");
                 alert.showAndWait();
             } else if (tfKey.getText() == null | "".equals(tfKey.getText())) {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
+                Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+                stage.getIcons().add(new Image(this.getClass().getResource("/com/sun/javafx/scene/control/skin/modena/dialog-warning.png").toString()));
                 alert.setTitle("Key location is missing");
-                alert.setHeaderText(null);
-                alert.setContentText("Please choose a location");
+                alert.setHeaderText("Please choose a location");
                 alert.showAndWait();
             } else if (rBtnEn.isSelected()) {
                 makeViewWhenStart();
@@ -323,9 +328,10 @@ public class SymmetricController {
                 symmetricEncryptionTask.setOnSucceeded(event1 -> {
                     resetViewWhenDone();
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+                    stage.getIcons().add(new Image(this.getClass().getResource("/com/sun/javafx/scene/control/skin/modena/dialog-information.png").toString()));
                     alert.setTitle("Done!");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Your file had been encrypted.");
+                    alert.setHeaderText("Your file had been encrypted.");
                     alert.showAndWait();
                 });
                 symmetricEncryptionTask.setOnFailed(event1 -> {
@@ -342,9 +348,10 @@ public class SymmetricController {
                 symmetricDecryptionTask.setOnSucceeded(event1 -> {
                     resetViewWhenDone();
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+                    stage.getIcons().add(new Image(this.getClass().getResource("/com/sun/javafx/scene/control/skin/modena/dialog-information.png").toString()));
                     alert.setTitle("Done!");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Your file had been decrypted.");
+                    alert.setHeaderText("Your file had been decrypted.");
                     alert.showAndWait();
                 });
                 symmetricDecryptionTask.setOnFailed(event1 -> {
@@ -357,9 +364,10 @@ public class SymmetricController {
                 btnStop.setOnAction(event1 -> symmetricDecryptionTask.cancel());
             } else {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
+                Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+                stage.getIcons().add(new Image(this.getClass().getResource("/com/sun/javafx/scene/control/skin/modena/dialog-error.png").toString()));
                 alert.setTitle("Error");
-                alert.setHeaderText(null);
-                alert.setContentText("Unknown error");
+                alert.setHeaderText("Unknown error");
                 alert.showAndWait();
             }
         });

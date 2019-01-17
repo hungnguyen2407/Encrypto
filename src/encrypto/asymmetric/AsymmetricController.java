@@ -5,12 +5,14 @@ import encrypto.ui.CopyButton;
 import javafx.fxml.FXML;
 import javafx.geometry.Bounds;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.input.Clipboard;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.SVGPath;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
@@ -128,16 +130,48 @@ public class AsymmetricController {
 
     private void btnStartDeHandler() {
         btnStart.setOnAction(event -> {
-            if ("".equals(comboBoxAlgorithm.getSelectionModel().getSelectedItem()) | "".equals(comboBoxMode.getSelectionModel().getSelectedItem()) | "".equals(comboBoxPadding.getSelectionModel().getSelectedItem()) | "".equals(tfKey.getText()) | !privateKey.exists() | "".equals(taInput.getText())) {
+            if (comboBoxAlgorithm.getSelectionModel().getSelectedItem() == null) {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
+                Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+                stage.getIcons().add(new Image(this.getClass().getResource("/com/sun/javafx/scene/control/skin/modena/dialog-warning.png").toString()));
                 alert.setTitle("Warning");
-                alert.setHeaderText(null);
-                alert.setContentText("Please fill all the required field.");
+                alert.setHeaderText("Please choose a type algorithm.");
+                alert.show();
+            } else if (comboBoxMode.getSelectionModel().getSelectedItem() == null) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+                stage.getIcons().add(new Image(this.getClass().getResource("/com/sun/javafx/scene/control/skin/modena/dialog-warning.png").toString()));
+                alert.setTitle("Warning");
+                alert.setHeaderText("Please choose a mode.");
+                alert.show();
+            } else if (comboBoxPadding.getSelectionModel().getSelectedItem() == null) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+                stage.getIcons().add(new Image(this.getClass().getResource("/com/sun/javafx/scene/control/skin/modena/dialog-warning.png").toString()));
+                alert.setTitle("Warning");
+                alert.setHeaderText("Please choose a padding.");
+                alert.show();
+            } else if (privateKey == null) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+                stage.getIcons().add(new Image(this.getClass().getResource("/com/sun/javafx/scene/control/skin/modena/dialog-warning.png").toString()));
+                alert.setTitle("Warning");
+                alert.setHeaderText("Please choose a private key.");
+                alert.show();
+            } else if (taInput.getText() == null | taInput.getText().trim().equals("")) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+                stage.getIcons().add(new Image(this.getClass().getResource("/com/sun/javafx/scene/control/skin/modena/dialog-warning.png").toString()));
+                alert.setTitle("Warning");
+                alert.setHeaderText("Please fill content to decrypt.");
+                alert.show();
             } else {
                 disableCryptoPane();
                 final AsymmetricDecryptionTask asymmetricDecryptionTask = new AsymmetricDecryptionTask(comboBoxAlgorithm.getSelectionModel().getSelectedItem(), comboBoxMode.getSelectionModel().getSelectedItem(), comboBoxPadding.getSelectionModel().getSelectedItem(), privateKey, Base64.getDecoder().decode(taInput.getText()));
                 asymmetricDecryptionTask.setOnSucceeded(event1 -> {
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+                    stage.getIcons().add(new Image(this.getClass().getResource("/com/sun/javafx/scene/control/skin/modena/dialog-information.png").toString()));
                     alert.setTitle("Done!");
                     alert.setHeaderText("Your cipher text had been decrypted. ");
                     VBox dialogPaneContent = new VBox();
@@ -174,36 +208,24 @@ public class AsymmetricController {
             FileChooser fileChooser = new FileChooser();
             fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Private key (*.prikey)", "*.prikey"));
             privateKey = fileChooser.showOpenDialog(null);
-            if (privateKey == null) {
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("Private key is missing");
-                alert.setHeaderText(null);
-                alert.setContentText("Please choose a private key.");
-
-            } else if (!privateKey.getName().endsWith(".prikey")) {
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("Wrong format");
-                alert.setHeaderText(null);
-                alert.setContentText("Please choose a file with private key extension.");
-            } else {
-                tfKey.setText(privateKey.getAbsolutePath());
+            if (privateKey != null) {
+                if (!privateKey.getName().endsWith(".prikey")) {
+                    Alert alert = new Alert(Alert.AlertType.WARNING);
+                    Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+                    stage.getIcons().add(new Image(this.getClass().getResource("/com/sun/javafx/scene/control/skin/modena/dialog-warning.png").toString()));
+                    alert.setTitle("Wrong format");
+                    alert.setHeaderText("Please choose a file with private key extension.");
+                    alert.show();
+                } else {
+                    tfKey.setText(privateKey.getAbsolutePath());
+                }
             }
         });
     }
 
     private void tfKeyDeHandler() {
         tfKey.clear();
-        tfKey.textProperty().addListener((observable, oldValue, newValue) -> {
-            File file = new File(newValue);
-            if (!file.getName().endsWith(".prikey")) {
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("Warning");
-                alert.setHeaderText(null);
-                alert.setContentText("Private key is invalid.");
-            } else {
-                privateKey = file;
-            }
-        });
+        privateKey = null;
     }
 
     private void lblKeyDeHandler() {
@@ -224,17 +246,49 @@ public class AsymmetricController {
 
     private void btnStartEnHandler() {
         btnStart.setOnAction(event -> {
-            if ("".equals(comboBoxAlgorithm.getSelectionModel().getSelectedItem()) | "".equals(comboBoxMode.getSelectionModel().getSelectedItem()) | "".equals(comboBoxPadding.getSelectionModel().getSelectedItem()) | "".equals(tfKey.getText()) | !publicKey.exists() | "".equals(taInput.getText())) {
+            if (comboBoxAlgorithm.getSelectionModel().getSelectedItem() == null) {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
+                Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+                stage.getIcons().add(new Image(this.getClass().getResource("/com/sun/javafx/scene/control/skin/modena/dialog-warning.png").toString()));
                 alert.setTitle("Warning");
-                alert.setHeaderText(null);
-                alert.setContentText("Please fill all the required field.");
+                alert.setHeaderText("Please choose a type algorithm.");
+                alert.show();
+            } else if (comboBoxMode.getSelectionModel().getSelectedItem() == null) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+                stage.getIcons().add(new Image(this.getClass().getResource("/com/sun/javafx/scene/control/skin/modena/dialog-warning.png").toString()));
+                alert.setTitle("Warning");
+                alert.setHeaderText("Please choose a mode.");
+                alert.show();
+            } else if (comboBoxPadding.getSelectionModel().getSelectedItem() == null) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+                stage.getIcons().add(new Image(this.getClass().getResource("/com/sun/javafx/scene/control/skin/modena/dialog-warning.png").toString()));
+                alert.setTitle("Warning");
+                alert.setHeaderText("Please choose a padding.");
+                alert.show();
+            } else if (publicKey == null) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+                stage.getIcons().add(new Image(this.getClass().getResource("/com/sun/javafx/scene/control/skin/modena/dialog-warning.png").toString()));
+                alert.setTitle("Warning");
+                alert.setHeaderText("Please choose a public key.");
+                alert.show();
+            } else if (taInput.getText() == null | taInput.getText().trim().equals("")) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+                stage.getIcons().add(new Image(this.getClass().getResource("/com/sun/javafx/scene/control/skin/modena/dialog-warning.png").toString()));
+                alert.setTitle("Warning");
+                alert.setHeaderText("Please fill content to encrypt.");
+                alert.show();
             } else {
                 disableCryptoPane();
                 final AsymmetricEncryptionTask asymmetricEncryptionTask = new AsymmetricEncryptionTask(comboBoxAlgorithm.getSelectionModel().getSelectedItem(), comboBoxMode.getSelectionModel().getSelectedItem(), comboBoxPadding.getSelectionModel().getSelectedItem(), publicKey, taInput.getText().getBytes());
 
                 asymmetricEncryptionTask.setOnSucceeded(event1 -> {
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+                    stage.getIcons().add(new Image(this.getClass().getResource("/com/sun/javafx/scene/control/skin/modena/dialog-information.png").toString()));
                     alert.setTitle("Done!");
                     alert.setHeaderText("Your plain text had been encrypted. ");
                     VBox dialogPaneContent = new VBox();
@@ -282,36 +336,24 @@ public class AsymmetricController {
             FileChooser fileChooser = new FileChooser();
             fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Public key (*.pubkey)", "*.pubkey"));
             publicKey = fileChooser.showOpenDialog(null);
-            if (publicKey == null) {
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("Public key is missing");
-                alert.setHeaderText(null);
-                alert.setContentText("Please choose a public key.");
-
-            } else if (!publicKey.getName().endsWith(".pubkey")) {
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("Wrong format");
-                alert.setHeaderText(null);
-                alert.setContentText("Please choose a file with public key extension.");
-            } else {
-                tfKey.setText(publicKey.getAbsolutePath());
+            if (publicKey != null) {
+                if (!publicKey.getName().endsWith(".pubkey")) {
+                    Alert alert = new Alert(Alert.AlertType.WARNING);
+                    Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+                    stage.getIcons().add(new Image(this.getClass().getResource("/com/sun/javafx/scene/control/skin/modena/dialog-warning.png").toString()));
+                    alert.setTitle("Wrong format");
+                    alert.setHeaderText("Please choose a file with public key extension.");
+                    alert.show();
+                } else {
+                    tfKey.setText(publicKey.getAbsolutePath());
+                }
             }
         });
     }
 
     private void tfKeyEnHandler() {
         tfKey.clear();
-        tfKey.textProperty().addListener((observable, oldValue, newValue) -> {
-            File file = new File(newValue);
-            if (!file.getName().endsWith(".pubkey")) {
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("Warning");
-                alert.setHeaderText(null);
-                alert.setContentText("Public key is invalid.");
-            } else {
-                publicKey = file;
-            }
-        });
+        publicKey = null;
     }
 
     private void lblKeyEnHandler() {
@@ -322,7 +364,7 @@ public class AsymmetricController {
         SVGPath svgPath = new SVGPath();
         svgPath.setContent("M128 184c0-30.879 25.122-56 56-56h136V56c0-13.255-10.745-24-24-24h-80.61C204.306 12.89 183.637 0 160 0s-44.306 12.89-55.39 32H24C10.745 32 0 42.745 0 56v336c0 13.255 10.745 24 24 24h104V184zm32-144c13.255 0 24 10.745 24 24s-10.745 24-24 24-24-10.745-24-24 10.745-24 24-24zm184 248h104v200c0 13.255-10.745 24-24 24H184c-13.255 0-24-10.745-24-24V184c0-13.255 10.745-24 24-24h136v104c0 13.2 10.8 24 24 24zm104-38.059V256h-96v-96h6.059a24 24 0 0 1 16.97 7.029l65.941 65.941a24.002 24.002 0 0 1 7.03 16.971z");
         Bounds bounds = svgPath.getBoundsInParent();
-        double scale = Math.min(20/bounds.getWidth(), 20 / bounds.getHeight());
+        double scale = Math.min(20 / bounds.getWidth(), 20 / bounds.getHeight());
         svgPath.setScaleX(scale);
         svgPath.setScaleY(scale);
         btnPaste.setGraphic(svgPath);

@@ -30,7 +30,7 @@ public class SignTask extends Task<File> {
     }
 
     private File signFile() throws Exception {
-        Signature sign = Signature.getInstance(algorithm, "SUN");
+        Signature sign = Signature.getInstance(algorithm);
         FileInputStream fis = new FileInputStream(key);
         byte[] keyBytes = new byte[fis.available()];
         fis.read(keyBytes);

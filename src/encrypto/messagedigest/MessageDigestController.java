@@ -4,12 +4,14 @@ import encrypto.ui.CopyButton;
 import javafx.fxml.FXML;
 import javafx.geometry.Bounds;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.input.Clipboard;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.SVGPath;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
 import java.io.File;
 
@@ -112,6 +114,8 @@ public class MessageDigestController {
                 messageDigestCreateDigestTask.setOnSucceeded(event1 -> {
                     resetView();
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+                    stage.getIcons().add(new Image(this.getClass().getResource("/com/sun/javafx/scene/control/skin/modena/dialog-information.png").toString()));
                     alert.setTitle("Success!");
                     alert.setHeaderText("Hash the file success.");
                     VBox dialogPaneContent = new VBox();
@@ -129,9 +133,10 @@ public class MessageDigestController {
                 messageDigestCreateDigestTask.setOnFailed(event1 -> {
                     resetView();
                     Alert alert = new Alert(Alert.AlertType.ERROR);
+                    Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+                    stage.getIcons().add(new Image(this.getClass().getResource("/com/sun/javafx/scene/control/skin/modena/dialog-error.png").toString()));
                     alert.setTitle("Error!");
-                    alert.setHeaderText(null);
-                    alert.setContentText(messageDigestCreateDigestTask.getException().getMessage());
+                    alert.setHeaderText(messageDigestCreateDigestTask.getException().getMessage());
                     alert.showAndWait();
                 });
                 btnStop.setOnAction(event1 -> {
@@ -146,12 +151,16 @@ public class MessageDigestController {
                     resetView();
                     if (messageDigestVerifyDigestTask.getValue()) {
                         Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                        Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+                        stage.getIcons().add(new Image(this.getClass().getResource("/com/sun/javafx/scene/control/skin/modena/dialog-information.png").toString()));
                         alert.setTitle("Success!");
                         alert.setHeaderText("Verify success.");
                         alert.setContentText("Hash matched.");
                         alert.showAndWait();
                     } else {
                         Alert alert = new Alert(Alert.AlertType.ERROR);
+                        Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+                        stage.getIcons().add(new Image(this.getClass().getResource("/com/sun/javafx/scene/control/skin/modena/dialog-error.png").toString()));
                         alert.setTitle("Failed!");
                         alert.setHeaderText("Verify failed.");
                         alert.setContentText("Hash not matched.");
@@ -162,9 +171,10 @@ public class MessageDigestController {
                 messageDigestVerifyDigestTask.setOnFailed(event1 -> {
                     resetView();
                     Alert alert = new Alert(Alert.AlertType.ERROR);
+                    Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+                    stage.getIcons().add(new Image(this.getClass().getResource("/com/sun/javafx/scene/control/skin/modena/dialog-error.png").toString()));
                     alert.setTitle("Error!");
-                    alert.setHeaderText(null);
-                    alert.setContentText(messageDigestVerifyDigestTask.getException().getMessage());
+                    alert.setHeaderText(messageDigestVerifyDigestTask.getException().getMessage());
                     alert.showAndWait();
                 });
                 btnStop.setOnAction(event1 -> {
