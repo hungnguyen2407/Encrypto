@@ -21,7 +21,7 @@ public class SymmetricController {
     @FXML
     private RadioButton rBtnEn, rBtnDe;
     @FXML
-    private ProgressBar progressBar;
+    private ProgressIndicator progressIndicator;
     @FXML
     private ComboBox<String> comboBoxAlgorithm, comboBoxMode, comboBoxPadding;
     @FXML
@@ -141,7 +141,7 @@ public class SymmetricController {
                         comboBoxPadding.setDisable(true);
                         comboBoxPadding.getItems().clear();
                         sliderKeySize.setMin(40);
-                        sliderKeySize.setMax(2048);
+                        sliderKeySize.setMax(1024);
                         sliderKeySize.setBlockIncrement(1);
                         sliderKeySize.setMajorTickUnit(256);
                         sliderKeySize.setMinorTickCount(40);
@@ -154,8 +154,8 @@ public class SymmetricController {
                         sliderKeySize.setDisable(false);
                         comboBoxPadding.setDisable(true);
                         comboBoxPadding.getItems().clear();
-                        sliderKeySize.setMin(0);
-                        sliderKeySize.setMax(2048);
+                        sliderKeySize.setMin(20);
+                        sliderKeySize.setMax(255);
                         sliderKeySize.setBlockIncrement(1);
                         sliderKeySize.setMajorTickUnit(255);
                         sliderKeySize.setMinorTickCount(1);
@@ -324,7 +324,7 @@ public class SymmetricController {
             } else if (rBtnEn.isSelected()) {
                 makeViewWhenStart();
                 final SymmetricEncryptionTask symmetricEncryptionTask = new SymmetricEncryptionTask(comboBoxAlgorithm.getSelectionModel().getSelectedItem(), comboBoxMode.getSelectionModel().getSelectedItem(), String.valueOf((int) sliderKeySize.getValue()), comboBoxPadding.getSelectionModel().getSelectedItem(), fileInput, fileOutput, key);
-                progressBar.progressProperty().bind(symmetricEncryptionTask.progressProperty());
+                progressIndicator.progressProperty().bind(symmetricEncryptionTask.progressProperty());
                 symmetricEncryptionTask.setOnSucceeded(event1 -> {
                     resetViewWhenDone();
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -340,11 +340,14 @@ public class SymmetricController {
                 });
                 symmetricEncryptionTask.setOnCancelled(event1 -> resetViewWhenDone());
                 new Thread(symmetricEncryptionTask).start();
-                btnStop.setOnAction(event1 -> resetViewWhenDone());
+                btnStop.setOnAction(event1 -> {
+                    symmetricEncryptionTask.cancel();
+                    resetViewWhenDone();
+                });
             } else if (rBtnDe.isSelected()) {
                 makeViewWhenStart();
                 final SymmetricDecryptionTask symmetricDecryptionTask = new SymmetricDecryptionTask(comboBoxAlgorithm.getSelectionModel().getSelectedItem(), comboBoxMode.getSelectionModel().getSelectedItem(), String.valueOf((int) sliderKeySize.getValue()), comboBoxPadding.getSelectionModel().getSelectedItem(), fileInput, fileOutput, key);
-                progressBar.progressProperty().bind(symmetricDecryptionTask.progressProperty());
+                progressIndicator.progressProperty().bind(symmetricDecryptionTask.progressProperty());
                 symmetricDecryptionTask.setOnSucceeded(event1 -> {
                     resetViewWhenDone();
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -361,7 +364,10 @@ public class SymmetricController {
                 symmetricDecryptionTask.setOnCancelled(event1 -> resetViewWhenDone());
 
                 new Thread(symmetricDecryptionTask).start();
-                btnStop.setOnAction(event1 -> symmetricDecryptionTask.cancel());
+                btnStop.setOnAction(event1 -> {
+                    symmetricDecryptionTask.cancel();
+                    resetViewWhenDone();
+                });
             } else {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
@@ -374,8 +380,8 @@ public class SymmetricController {
     }
 
     private void makeViewWhenStart() {
-        progressBar.setProgress(0);
-        progressBar.setVisible(true);
+        progressIndicator.setProgress(0);
+        progressIndicator.setVisible(true);
         rBtnEn.setDisable(true);
         rBtnDe.setDisable(true);
         tfSrc.setDisable(true);
@@ -392,12 +398,12 @@ public class SymmetricController {
         btnStart.setDisable(true);
         btnStop.setVisible(true);
         btnStop.setDisable(false);
-        progressBar.progressProperty().unbind();
+        progressIndicator.progressProperty().unbind();
     }
 
     private void resetViewWhenDone() {
-        progressBar.progressProperty().unbind();
-        progressBar.setVisible(false);
+        progressIndicator.progressProperty().unbind();
+        progressIndicator.setVisible(false);
         btnStart.setDisable(false);
         btnStart.setVisible(true);
         btnStop.setDisable(true);

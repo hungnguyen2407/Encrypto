@@ -26,6 +26,7 @@
             <Font size="16.0"/>
         </font>
     </Button>
+    <ProgressIndicator fx:id="progressIndicator" layoutX="350.0" layoutY="480.0" progress="0.0" visible="f"/>
     <AnchorPane fx:id="paneDI" disable="true" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="100.0">
 
         <Label layoutX="38.0" layoutY="36.0" text="Type">

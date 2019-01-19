@@ -38,7 +38,7 @@
     <TextField fx:id="tfSrc" disable="true" layoutX="34.0" layoutY="302.0" prefHeight="25.0" prefWidth="410.0"/>
     <TextField fx:id="tfDes" disable="true" layoutX="37.0" layoutY="367.0" prefHeight="25.0" prefWidth="410.0"/>
     <Button fx:id="btnDes" disable="true" layoutX="448.0" layoutY="367.0" mnemonicParsing="false" text="Choose"/>
-    <Button fx:id="btnStart" disable="true" layoutX="209.0" layoutY="516.0" mnemonicParsing="false" prefHeight="37.0"
+    <Button fx:id="btnStart" disable="true" layoutX="209.0" layoutY="507.0" mnemonicParsing="false" prefHeight="37.0"
             prefWidth="124.0" text="Start">
         <font>
             <Font size="16.0" />
@@ -53,8 +53,7 @@
     <Label layoutX="33.0" layoutY="408.0" text="Key location" />
     <TextField fx:id="tfKey" disable="true" layoutX="37.0" layoutY="434.0" prefHeight="25.0" prefWidth="410.0"/>
     <Button fx:id="btnKey" disable="true" layoutX="448.0" layoutY="434.0" mnemonicParsing="false" text="Choose"/>
-    <ProgressBar fx:id="progressBar" layoutX="94.0" layoutY="498.0" prefHeight="3.0" prefWidth="349.0" progress="0.0"
-                 visible="false"/>
+    <ProgressIndicator fx:id="progressIndicator" layoutX="352.0" layoutY="502.0" progress="0.0" visible="false"/>
     <Separator layoutX="16.0" layoutY="481.0" prefHeight="3.0" prefWidth="502.0" />
     <Separator layoutX="516.0" layoutY="244.0" orientation="VERTICAL" prefHeight="237.0" />
     <Separator layoutX="15.0" layoutY="244.0" orientation="VERTICAL" prefHeight="237.0" />
@@ -80,7 +79,7 @@
     <RadioButton fx:id="rBtnDe" layoutX="301.0" layoutY="54.0" mnemonicParsing="false" text="Decryption"
                  toggleGroup="$cryptography"/>
     <Button fx:id="btnSrc" disable="true" layoutX="448.0" layoutY="302.0" mnemonicParsing="false" text="Choose"/>
-    <Button fx:id="btnStop" disable="true" layoutX="209.0" layoutY="516.0" mnemonicParsing="false" prefHeight="37.0"
+    <Button fx:id="btnStop" disable="true" layoutX="209.0" layoutY="507.0" mnemonicParsing="false" prefHeight="37.0"
             prefWidth="124.0" text="Stop" visible="false">
         <font>
             <Font size="16.0" />

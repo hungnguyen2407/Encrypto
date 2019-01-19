@@ -37,6 +37,7 @@ public class SignTask extends Task<File> {
         PKCS8EncodedKeySpec priKeySpec = new PKCS8EncodedKeySpec(keyBytes);
 
         KeyFactory keyFactory = null;
+
         if (algorithm.endsWith("DSA")) {
             keyFactory = KeyFactory.getInstance("DSA");
         } else if (algorithm.endsWith("RSA")) {
@@ -44,14 +45,18 @@ public class SignTask extends Task<File> {
         } else {
             throw new NoSuchAlgorithmException();
         }
+
         PrivateKey privateKey = keyFactory.generatePrivate(priKeySpec);
         sign.initSign(privateKey);
 
         fis = new FileInputStream(src);
         int byteRead = 0;
+        int i = 1;
         byte[] bytes = new byte[1024];
         while ((byteRead = fis.read(bytes)) != -1) {
             sign.update(bytes, 0, byteRead);
+            this.updateProgress(1024 * i, this.src.length());
+            i++;
         }
         fis.close();
         byte[] signBytes = sign.sign();

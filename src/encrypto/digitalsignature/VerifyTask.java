@@ -31,6 +31,7 @@ public class VerifyTask extends Task<Boolean> {
     private boolean verifyFile() throws Exception {
         FileInputStream fis = new FileInputStream(key);
         int byteRead = 0;
+        int i = 1;
         byte[] keyBytes = new byte[fis.available()];
         fis.read(keyBytes);
         fis.close();
@@ -52,6 +53,8 @@ public class VerifyTask extends Task<Boolean> {
         byte[] bytes = new byte[1024];
         while ((byteRead = fis.read(bytes)) != -1) {
             sign.update(bytes, 0, byteRead);
+            this.updateProgress(1024 * i, this.src.length());
+            i++;
         }
         fis.close();
         fis = new FileInputStream(this.sign);

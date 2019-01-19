@@ -27,6 +27,8 @@ public class DigitalSignatureController {
     @FXML
     private ComboBox<String> comboBoxAlgorithm;
     @FXML
+    private ProgressIndicator progressIndicator;
+    @FXML
     private Label lblKey;
     private File key, sign, src;
 
@@ -162,7 +164,10 @@ public class DigitalSignatureController {
                 rBtnSign.setDisable(true);
                 rBtnVerify.setDisable(true);
                 btnStart.setVisible(false);
+                progressIndicator.progressProperty().unbind();
+                progressIndicator.setVisible(true);
                 VerifyTask verifyTask = new VerifyTask(src, key, sign, comboBoxAlgorithm.getSelectionModel().getSelectedItem());
+                progressIndicator.progressProperty().bind(verifyTask.progressProperty());
                 verifyTask.setOnSucceeded(event1 -> {
                     paneDI.setDisable(false);
                     rBtnSign.setDisable(false);
@@ -170,6 +175,7 @@ public class DigitalSignatureController {
                     btnStop.setVisible(false);
                     btnStop.setDisable(true);
                     btnStart.setVisible(true);
+                    progressIndicator.setVisible(false);
                     if (verifyTask.getValue()) {
                         Alert alert = new Alert(Alert.AlertType.INFORMATION);
                         Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
@@ -194,6 +200,7 @@ public class DigitalSignatureController {
                     btnStop.setVisible(false);
                     btnStop.setDisable(true);
                     btnStart.setVisible(true);
+                    progressIndicator.setVisible(false);
                     Ultilities.showExceptionHandler(verifyTask);
                 });
 
@@ -207,6 +214,7 @@ public class DigitalSignatureController {
                     btnStop.setVisible(false);
                     btnStop.setDisable(true);
                     btnStart.setVisible(true);
+                    progressIndicator.setVisible(false);
                 });
 
                 new Thread(verifyTask).start();
@@ -302,7 +310,10 @@ public class DigitalSignatureController {
                 rBtnSign.setDisable(true);
                 rBtnVerify.setDisable(true);
                 btnStart.setVisible(false);
+                progressIndicator.progressProperty().unbind();
+                progressIndicator.setVisible(true);
                 SignTask signTask = new SignTask(src, key, sign, comboBoxAlgorithm.getSelectionModel().getSelectedItem());
+                progressIndicator.progressProperty().bind(signTask.progressProperty());
                 signTask.setOnSucceeded(event1 -> {
                     paneDI.setDisable(false);
                     rBtnSign.setDisable(false);
@@ -310,6 +321,7 @@ public class DigitalSignatureController {
                     btnStop.setVisible(false);
                     btnStop.setDisable(true);
                     btnStart.setVisible(true);
+                    progressIndicator.setVisible(false);
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
                     Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
                     stage.getIcons().add(new Image(this.getClass().getResource("/com/sun/javafx/scene/control/skin/modena/dialog-information.png").toString()));
@@ -325,6 +337,7 @@ public class DigitalSignatureController {
                     btnStop.setVisible(false);
                     btnStop.setDisable(true);
                     btnStart.setVisible(true);
+                    progressIndicator.setVisible(false);
                     Ultilities.showExceptionHandler(signTask);
                 });
 
@@ -338,6 +351,7 @@ public class DigitalSignatureController {
                     btnStop.setVisible(false);
                     btnStop.setDisable(true);
                     btnStart.setVisible(true);
+                    progressIndicator.setVisible(false);
                 });
 
                 new Thread(signTask).start();
