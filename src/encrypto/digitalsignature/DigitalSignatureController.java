@@ -91,6 +91,8 @@ public class DigitalSignatureController {
                     alert.showAndWait();
                 } else {
                     tfSrc.setText(src.getAbsolutePath());
+                    sign = new File(src.getAbsolutePath() + ".sign");
+                    tfSign.setText(sign.getAbsolutePath());
                 }
             }
         });
@@ -244,6 +246,8 @@ public class DigitalSignatureController {
                     alert.showAndWait();
                 } else {
                     tfSrc.setText(src.getAbsolutePath());
+                    sign = new File(src.getAbsolutePath() + ".sign");
+                    tfSign.setText(sign.getAbsolutePath());
                 }
             }
         });

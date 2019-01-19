@@ -229,6 +229,10 @@ public class SymmetricController {
                 fileInput = fileChooser.showOpenDialog(null);
                 if (fileInput != null)
                     tfSrc.setText(fileInput.getAbsolutePath());
+                fileOutput = new File(fileInput.getAbsolutePath() + ".encrypt");
+                tfDes.setText(fileOutput.getAbsolutePath());
+                key = new File(fileInput.getAbsolutePath() + ".key");
+                tfKey.setText(key.getAbsolutePath());
             });
             btnDes.setDisable(false);
             btnDes.setOnAction(event12 -> {
@@ -272,8 +276,13 @@ public class SymmetricController {
                 fileChooser.setTitle("Choose encrypted file");
                 fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Encrypted file (*.encrypt)", "*.encrypt"));
                 fileInput = fileChooser.showOpenDialog(null);
-                if (fileInput != null)
+                if (fileInput != null) {
                     tfSrc.setText(fileInput.getAbsolutePath());
+                    fileOutput = new File(fileInput.getAbsolutePath().substring(0, fileInput.getAbsolutePath().length() - 8));
+                    tfDes.setText(fileOutput.getAbsolutePath());
+                    key = new File(fileInput.getAbsolutePath().substring(0, fileInput.getAbsolutePath().length() - 8) + ".key");
+                    tfKey.setText(key.getAbsolutePath());
+                }
             });
             btnDes.setDisable(false);
             btnDes.setOnAction(event15 -> {
