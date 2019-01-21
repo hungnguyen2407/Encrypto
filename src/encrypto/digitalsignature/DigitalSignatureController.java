@@ -1,12 +1,12 @@
 package encrypto.digitalsignature;
 
-import encrypto.Ultilities;
+import encrypto.ui.ErrorDialog;
+import encrypto.ui.InformationDialog;
+import encrypto.ui.WarningDialog;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 
 import java.io.File;
 
@@ -83,12 +83,7 @@ public class DigitalSignatureController {
             src = fileChooser.showOpenDialog(null);
             if (src != null) {
                 if (!src.exists()) {
-                    Alert alert = new Alert(Alert.AlertType.WARNING);
-                    Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
-                    stage.getIcons().add(new Image(this.getClass().getResource("/com/sun/javafx/scene/control/skin/modena/dialog-warning.png").toString()));
-                    alert.setTitle("Warning");
-                    alert.setHeaderText("Access dined. Please check permission of the file.");
-                    alert.showAndWait();
+                    new WarningDialog("Warning!", "Access dined. Please check permission of the file.");
                 } else {
                     tfSrc.setText(src.getAbsolutePath());
                     sign = new File(src.getAbsolutePath() + ".sign");
@@ -103,12 +98,7 @@ public class DigitalSignatureController {
             sign = fileChooser.showOpenDialog(null);
             if (sign != null) {
                 if (!sign.exists()) {
-                    Alert alert = new Alert(Alert.AlertType.WARNING);
-                    Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
-                    stage.getIcons().add(new Image(this.getClass().getResource("/com/sun/javafx/scene/control/skin/modena/dialog-warning.png").toString()));
-                    alert.setTitle("Warning");
-                    alert.setHeaderText("Access dined. Please check permission of sign file.");
-                    alert.showAndWait();
+                    new WarningDialog("Warning!", "Access dined. Please check permission of sign file.");
                 } else {
                     tfSign.setText(sign.getAbsolutePath());
                 }
@@ -121,12 +111,7 @@ public class DigitalSignatureController {
             key = fileChooser.showOpenDialog(null);
             if (key != null) {
                 if (!key.exists()) {
-                    Alert alert = new Alert(Alert.AlertType.WARNING);
-                    Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
-                    stage.getIcons().add(new Image(this.getClass().getResource("/com/sun/javafx/scene/control/skin/modena/dialog-warning.png").toString()));
-                    alert.setTitle("Warning");
-                    alert.setHeaderText("Access dined. Please check permission of public key file.");
-                    alert.showAndWait();
+                    new WarningDialog("Warning!", "Access dined. Please check permission of public key file.");
                 } else {
                     tfKey.setText(key.getAbsolutePath());
                 }
@@ -134,33 +119,13 @@ public class DigitalSignatureController {
         });
         btnStart.setOnAction(event -> {
             if (comboBoxAlgorithm.getSelectionModel().getSelectedItem() == null) {
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
-                stage.getIcons().add(new Image(this.getClass().getResource("/com/sun/javafx/scene/control/skin/modena/dialog-warning.png").toString()));
-                alert.setTitle("Warning");
-                alert.setHeaderText("Please choose a type algorithm.");
-                alert.showAndWait();
+                new WarningDialog("Warning!", "Please choose a type algorithm.");
             } else if (key == null) {
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
-                stage.getIcons().add(new Image(this.getClass().getResource("/com/sun/javafx/scene/control/skin/modena/dialog-warning.png").toString()));
-                alert.setTitle("Warning");
-                alert.setHeaderText("Please choose a public key.");
-                alert.showAndWait();
+                new WarningDialog("Warning!", "Please choose a public key.");
             } else if (src == null) {
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
-                stage.getIcons().add(new Image(this.getClass().getResource("/com/sun/javafx/scene/control/skin/modena/dialog-warning.png").toString()));
-                alert.setTitle("Warning");
-                alert.setHeaderText("Please choose a source file to sign.");
-                alert.showAndWait();
+                new WarningDialog("Warning!", "Please choose a source file to sign.");
             } else if (sign == null) {
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
-                stage.getIcons().add(new Image(this.getClass().getResource("/com/sun/javafx/scene/control/skin/modena/dialog-warning.png").toString()));
-                alert.setTitle("Warning");
-                alert.setHeaderText("Please choose a sign file to verify.");
-                alert.showAndWait();
+                new WarningDialog("Warning!", "Please choose a sign file to verify.");
             } else {
                 paneDI.setDisable(true);
                 rBtnSign.setDisable(true);
@@ -179,19 +144,9 @@ public class DigitalSignatureController {
                     btnStart.setVisible(true);
                     progressIndicator.setVisible(false);
                     if (verifyTask.getValue()) {
-                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                        Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
-                        stage.getIcons().add(new Image(this.getClass().getResource("/com/sun/javafx/scene/control/skin/modena/dialog-information.png").toString()));
-                        alert.setTitle("Success!");
-                        alert.setHeaderText("Verify success. Your file is the original.");
-                        alert.showAndWait();
+                        new InformationDialog("Success!", "Verify success. Your file is the original.");
                     } else {
-                        Alert alert = new Alert(Alert.AlertType.ERROR);
-                        Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
-                        stage.getIcons().add(new Image(this.getClass().getResource("/com/sun/javafx/scene/control/skin/modena/dialog-error.png").toString()));
-                        alert.setTitle("Failed!");
-                        alert.setHeaderText("Verify failed.");
-                        alert.showAndWait();
+                        new ErrorDialog("Failed!", "Verify failed. The file or the sign file had been modified.");
                     }
                 });
 
@@ -203,7 +158,7 @@ public class DigitalSignatureController {
                     btnStop.setDisable(true);
                     btnStart.setVisible(true);
                     progressIndicator.setVisible(false);
-                    Ultilities.showExceptionHandler(verifyTask);
+                    new ErrorDialog("Error!", verifyTask.getException().getMessage());
                 });
 
                 btnStop.setVisible(true);
@@ -238,12 +193,7 @@ public class DigitalSignatureController {
             src = fileChooser.showOpenDialog(null);
             if (src != null) {
                 if (!src.exists()) {
-                    Alert alert = new Alert(Alert.AlertType.WARNING);
-                    Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
-                    stage.getIcons().add(new Image(this.getClass().getResource("/com/sun/javafx/scene/control/skin/modena/dialog-warning.png").toString()));
-                    alert.setTitle("Warning");
-                    alert.setHeaderText("Access dined. Please check permission of the file.");
-                    alert.showAndWait();
+                    new WarningDialog("Warning!", "Access dined. Please check permission of the file.");
                 } else {
                     tfSrc.setText(src.getAbsolutePath());
                     sign = new File(src.getAbsolutePath() + ".sign");
@@ -268,12 +218,7 @@ public class DigitalSignatureController {
             key = fileChooser.showOpenDialog(null);
             if (key != null) {
                 if (!key.exists()) {
-                    Alert alert = new Alert(Alert.AlertType.WARNING);
-                    Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
-                    stage.getIcons().add(new Image(this.getClass().getResource("/com/sun/javafx/scene/control/skin/modena/dialog-warning.png").toString()));
-                    alert.setTitle("Warning");
-                    alert.setHeaderText("Access dined. Please check permission of private key file.");
-                    alert.showAndWait();
+                    new WarningDialog("Warning!", "Access dined. Please check permission of private key file.");
                 } else {
                     tfKey.setText(key.getAbsolutePath());
                 }
@@ -282,33 +227,13 @@ public class DigitalSignatureController {
 
         btnStart.setOnAction(event -> {
             if (comboBoxAlgorithm.getSelectionModel().getSelectedItem() == null) {
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
-                stage.getIcons().add(new Image(this.getClass().getResource("/com/sun/javafx/scene/control/skin/modena/dialog-warning.png").toString()));
-                alert.setTitle("Warning");
-                alert.setHeaderText("Please choose a type algorithm.");
-                alert.showAndWait();
+                new WarningDialog("Warning!", "Please choose a type algorithm.");
             } else if (key == null) {
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
-                stage.getIcons().add(new Image(this.getClass().getResource("/com/sun/javafx/scene/control/skin/modena/dialog-warning.png").toString()));
-                alert.setTitle("Warning");
-                alert.setHeaderText("Please choose a public key.");
-                alert.showAndWait();
+                new WarningDialog("Warning!", "Please choose a public key.");
             } else if (src == null) {
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
-                stage.getIcons().add(new Image(this.getClass().getResource("/com/sun/javafx/scene/control/skin/modena/dialog-warning.png").toString()));
-                alert.setTitle("Warning");
-                alert.setHeaderText("Please choose a source file to sign.");
-                alert.showAndWait();
+                new WarningDialog("Warning!", "Please choose a source file to sign.");
             } else if (sign == null) {
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
-                stage.getIcons().add(new Image(this.getClass().getResource("/com/sun/javafx/scene/control/skin/modena/dialog-warning.png").toString()));
-                alert.setTitle("Warning");
-                alert.setHeaderText("Please choose a sign file to verify.");
-                alert.showAndWait();
+                new WarningDialog("Warning!", "Please choose a sign file to verify.");
             } else {
                 paneDI.setDisable(true);
                 rBtnSign.setDisable(true);
@@ -326,12 +251,7 @@ public class DigitalSignatureController {
                     btnStop.setDisable(true);
                     btnStart.setVisible(true);
                     progressIndicator.setVisible(false);
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
-                    stage.getIcons().add(new Image(this.getClass().getResource("/com/sun/javafx/scene/control/skin/modena/dialog-information.png").toString()));
-                    alert.setTitle("Success!");
-                    alert.setHeaderText("Sign file success.");
-                    alert.showAndWait();
+                    new InformationDialog("Success!", "Sign file success.");
                 });
 
                 signTask.setOnFailed(event1 -> {
@@ -342,7 +262,7 @@ public class DigitalSignatureController {
                     btnStop.setDisable(true);
                     btnStart.setVisible(true);
                     progressIndicator.setVisible(false);
-                    Ultilities.showExceptionHandler(signTask);
+                    new ErrorDialog("Error!", signTask.getException().getMessage());
                 });
 
                 btnStop.setVisible(true);

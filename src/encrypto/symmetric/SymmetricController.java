@@ -1,6 +1,6 @@
 package encrypto.symmetric;
 
-import encrypto.Ultilities;
+import encrypto.ui.ErrorDialog;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -345,7 +345,7 @@ public class SymmetricController {
                 });
                 symmetricEncryptionTask.setOnFailed(event1 -> {
                     resetViewWhenDone();
-                    Ultilities.showExceptionHandler(symmetricEncryptionTask);
+                    new ErrorDialog("Error!", symmetricEncryptionTask.getException().getMessage());
                 });
                 symmetricEncryptionTask.setOnCancelled(event1 -> resetViewWhenDone());
                 new Thread(symmetricEncryptionTask).start();
@@ -368,7 +368,7 @@ public class SymmetricController {
                 });
                 symmetricDecryptionTask.setOnFailed(event1 -> {
                     resetViewWhenDone();
-                    Ultilities.showExceptionHandler(symmetricDecryptionTask);
+                    new ErrorDialog("Error!", symmetricDecryptionTask.getException().getMessage());
                 });
                 symmetricDecryptionTask.setOnCancelled(event1 -> resetViewWhenDone());
 

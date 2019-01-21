@@ -12,7 +12,7 @@ import java.lang.reflect.Method;
 
 public class Main extends Application {
 
-    static final String APP_VERSION = "1.6.4";
+    static final String APP_VERSION = "1.6.5";
 
     public static void main(String[] args) {
         launch(args);
