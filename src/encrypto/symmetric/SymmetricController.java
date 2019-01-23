@@ -1,8 +1,6 @@
 package encrypto.symmetric;
 
 import encrypto.ui.ErrorDialog;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -26,8 +24,6 @@ public class SymmetricController {
     private ComboBox<String> comboBoxAlgorithm, comboBoxMode, comboBoxPadding;
     @FXML
     private Slider sliderKeySize;
-    @FXML
-    private Label keySizeValue;
 
     private File fileInput, fileOutput, key;
 
@@ -52,13 +48,6 @@ public class SymmetricController {
         comboBoxAlgorithm.getItems().addAll(
                 "AES", "DES", "DESede", "Blowfish", "RC2", "RC4", "RC5"
         );
-
-        sliderKeySize.valueProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                keySizeValue.setText((int) sliderKeySize.getValue() + "");
-            }
-        });
 
         //Handler for choose algorithm, mode, key size, padding
         comboBoxAlgorithm.setOnAction(event -> {
@@ -143,7 +132,7 @@ public class SymmetricController {
                         sliderKeySize.setMin(40);
                         sliderKeySize.setMax(1024);
                         sliderKeySize.setBlockIncrement(1);
-                        sliderKeySize.setMajorTickUnit(256);
+                        sliderKeySize.setMajorTickUnit(1024);
                         sliderKeySize.setMinorTickCount(40);
                         sliderKeySize.setValue(40);
                         sliderKeySize.setSnapToTicks(false);

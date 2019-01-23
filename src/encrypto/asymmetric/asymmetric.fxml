@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
@@ -10,12 +11,13 @@
             <Font size="21.0" />
         </font>
     </Label>
-    <RadioButton fx:id="rBtnEn" layoutX="122.0" layoutY="53.0" mnemonicParsing="false" text="Encryption">
+    <JFXRadioButton fx:id="rBtnEn" layoutX="122.0" layoutY="53.0" mnemonicParsing="false" text="Encryption">
       <toggleGroup>
             <ToggleGroup fx:id="cryptography" />
       </toggleGroup>
-    </RadioButton>
-    <RadioButton fx:id="rBtnDe" layoutX="288.0" layoutY="53.0" mnemonicParsing="false" text="Decryption" toggleGroup="$cryptography" />
+    </JFXRadioButton>
+    <JFXRadioButton fx:id="rBtnDe" layoutX="288.0" layoutY="53.0" mnemonicParsing="false" text="Decryption"
+                    toggleGroup="$cryptography"/>
     <AnchorPane fx:id="paneCrypto" disable="true" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="100.0">
 
         <Label layoutX="38.0" layoutY="36.0" text="Type">
@@ -34,15 +36,18 @@
             </font>
         </Label>
         <Separator layoutX="66.0" layoutY="164.0" prefHeight="3.0" prefWidth="450.0" />
-        <Button fx:id="btnStart" layoutX="209.0" layoutY="418.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="124.0" text="Start">
+        <JFXButton fx:id="btnStart" layoutX="209.0" layoutY="418.0" mnemonicParsing="false" prefHeight="37.0"
+                   prefWidth="124.0" text="Start">
             <font>
                 <Font size="16.0" />
             </font>
-        </Button>
-        <ComboBox fx:id="comboBoxAlgorithm" layoutX="121.0" layoutY="34.0" prefHeight="25.0" prefWidth="150.0" />
-        <ComboBox fx:id="comboBoxMode" disable="true" layoutX="353.0" layoutY="36.0" prefHeight="25.0" prefWidth="150.0" />
-        <ComboBox fx:id="comboBoxPadding" disable="true" layoutX="354.0" layoutY="76.0" prefHeight="25.0" prefWidth="150.0" />
-        <TextField fx:id="tfKey" layoutX="111.0" layoutY="188.0" prefHeight="25.0" prefWidth="317.0" />
+        </JFXButton>
+        <JFXComboBox fx:id="comboBoxAlgorithm" layoutX="121.0" layoutY="34.0" prefHeight="25.0" prefWidth="150.0"/>
+        <JFXComboBox fx:id="comboBoxMode" disable="true" layoutX="353.0" layoutY="36.0" prefHeight="25.0"
+                     prefWidth="150.0"/>
+        <JFXComboBox fx:id="comboBoxPadding" disable="true" layoutX="354.0" layoutY="76.0" prefHeight="25.0"
+                     prefWidth="150.0"/>
+        <JFXTextField fx:id="tfKey" layoutX="111.0" layoutY="188.0" prefHeight="25.0" prefWidth="317.0"/>
         <Separator layoutX="15.0" layoutY="401.0" prefHeight="3.0" prefWidth="502.0" />
         <Separator layoutX="515.0" layoutY="164.0" orientation="VERTICAL" prefHeight="237.0" />
         <Separator layoutX="14.0" layoutY="164.0" orientation="VERTICAL" prefHeight="237.0" />
@@ -60,13 +65,15 @@
                 <Font size="16.0" />
             </font>
         </Label>
-        <Button fx:id="btnStop" disable="true" layoutX="208.0" layoutY="436.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="124.0" text="Stop" visible="false">
+        <JFXButton fx:id="btnStop" disable="true" layoutX="208.0" layoutY="436.0" mnemonicParsing="false"
+                   prefHeight="37.0" prefWidth="124.0" text="Stop" visible="false">
             <font>
                 <Font size="16.0" />
             </font>
-        </Button>
-        <TextArea fx:id="taInput" layoutX="39.0" layoutY="259.0" prefHeight="131.0" prefWidth="461.0" AnchorPane.leftAnchor="39.0" AnchorPane.topAnchor="259.0" />
-        <Button fx:id="btnKey" layoutX="440.0" layoutY="188.0" mnemonicParsing="false" text="Choose" />
+        </JFXButton>
+        <JFXTextArea fx:id="taInput" layoutX="39.0" layoutY="259.0" prefHeight="131.0" prefWidth="461.0"
+                     AnchorPane.leftAnchor="39.0" AnchorPane.topAnchor="259.0"/>
+        <JFXButton fx:id="btnKey" layoutX="440.0" layoutY="188.0" mnemonicParsing="false" text="Choose"/>
         <Label fx:id="lblKey" layoutX="25.0" layoutY="191.0" text="Public key">
             <font>
                 <Font size="14.0" />
@@ -77,6 +84,6 @@
                 <Font size="14.0" />
             </font>
         </Label>
-      <Button fx:id="btnPaste" layoutX="461.0" layoutY="356.0" mnemonicParsing="false" text="Paste" />
+        <JFXButton fx:id="btnPaste" layoutX="461.0" layoutY="356.0" mnemonicParsing="false" text="Paste"/>
     </AnchorPane>
 </AnchorPane>
