@@ -1,15 +1,15 @@
-#Encrypto
+# Encrypto
 
 An application for cryptography
 
-###Technologies
+### Technologies
 - JAVA
 - JAVAFX
 
-###Download
+### Download
 - [2.0](https://github.com/hungnguyen2407/Encrypto/raw/master/build/Encrypto-2.0.jar)
 
-###Changelog
+### Changelog
 - 2.0
 
     Update visual using [JFoeniX](http://www.jfoenix.com)
@@ -83,18 +83,19 @@ An application for cryptography
 
     Initialize
 
-###List of cryptography supported:
+### List of cryptography supported:
 - Symmetric: AES, DES, DESede, Blowfish, RC2, RC4, RC5
 - Asymmetric: RSA with key size 1024, 2048 bit.
 - Digital signature: SHA1withDSA, SHA1withRSA, SHA256withRSA
 - Keypair generate: RSA (1024, 2048), DSA (1024, 2048)
 - Message digest: MD2, MD4, MD5, SHA-1, SHA-224, SHA-256, SHA-3, SHA-384, SHA-512
-###Libraries
+### Libraries
 - [Bouncy Castle cryptography API](https://www.bouncycastle.org/java.html)
 - [JFoeniX](http://www.jfoenix.com)
-###License
+
+### License
 Copyright @ Nguyen Hoang Hung.
 
-###Contact
+### Contact
 [hungnguyen240796@icloud.com](mailto:hungnguyen240796@icloud.com)
 
