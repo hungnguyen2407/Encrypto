@@ -7,9 +7,11 @@ An application for cryptography
 - JAVAFX
 
 ### Download
-- [2.0](https://github.com/hungnguyen2407/Encrypto/raw/master/build/Encrypto-2.0.jar)
+
+- [2.0](https://github.com/hungnguyen2407/Encrypto/raw/master/build/Encrypto-2.0.zip)
 
 ### Changelog
+
 - 2.0
 
     Update visual using [JFoeniX](http://www.jfoenix.com)
