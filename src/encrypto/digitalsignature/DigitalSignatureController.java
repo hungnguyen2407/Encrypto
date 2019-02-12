@@ -206,10 +206,12 @@ public class DigitalSignatureController {
             FileChooser fileChooser = new FileChooser();
             fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Sign file (*.sign)", "*.sign"));
             sign = fileChooser.showSaveDialog(null);
-            if (!sign.getName().endsWith(".sign")) {
-                sign.renameTo(new File(sign.getName() + ".sign"));
+            if (sign != null) {
+                if (!sign.getName().endsWith(".sign")) {
+                    sign.renameTo(new File(sign.getName() + ".sign"));
+                }
+                tfSign.setText(sign.getAbsolutePath());
             }
-            tfSign.setText(sign.getAbsolutePath());
         });
 
         btnKey.setOnAction(event -> {

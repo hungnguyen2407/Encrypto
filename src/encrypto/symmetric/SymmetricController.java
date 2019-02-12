@@ -216,12 +216,13 @@ public class SymmetricController {
                 FileChooser fileChooser = new FileChooser();
                 fileChooser.setTitle("Choose file");
                 fileInput = fileChooser.showOpenDialog(null);
-                if (fileInput != null)
+                if (fileInput != null) {
                     tfSrc.setText(fileInput.getAbsolutePath());
-                fileOutput = new File(fileInput.getAbsolutePath() + ".encrypt");
-                tfDes.setText(fileOutput.getAbsolutePath());
-                key = new File(fileInput.getAbsolutePath() + ".key");
-                tfKey.setText(key.getAbsolutePath());
+                    fileOutput = new File(fileInput.getAbsolutePath() + ".encrypt");
+                    tfDes.setText(fileOutput.getAbsolutePath());
+                    key = new File(fileInput.getAbsolutePath() + ".key");
+                    tfKey.setText(key.getAbsolutePath());
+                }
             });
             btnDes.setDisable(false);
             btnDes.setOnAction(event12 -> {
