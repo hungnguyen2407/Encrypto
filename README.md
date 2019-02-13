@@ -8,10 +8,16 @@ An application for cryptography
 
 ### Download
 
-- [2.0.1](https://github.com/hungnguyen2407/Encrypto/raw/master/build/Encrypto-2.0.1.zip)
+- Click [here](https://github.com/hungnguyen2407/Encrypto/releases) to go to the download page
 
 ### Changelog
 
+- 2.0.2
+    
+    Improve code
+    
+    Fix bug
+    
 - 2.0.1
 
     Update visual using [JFoeniX](http://www.jfoenix.com)
